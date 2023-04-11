@@ -15,6 +15,9 @@ namespace Infrastructure.Persistance
         public DbSet<Location> Locations { get; set; }
         public DbSet<Gender> Genders { get; set; }
         public DbSet<Image> Images { get; set; }
+        public DbSet<Authentication> Authentication { get; set; }
+        public DbSet<City> Cities { get; set; }
+        public DbSet<Province> Provinces { get; set; }
 
         public ExpresoDbContext(DbContextOptions<ExpresoDbContext> options ) : base(options)
         {
@@ -32,17 +35,40 @@ namespace Infrastructure.Persistance
                 entity.Property(e => e.Name).HasMaxLength(50);
                 entity.Property(e => e.LastName).HasMaxLength(50);
                 entity.Property(e => e.Description).HasMaxLength(255);
+
                 entity.HasOne<Location>(l => l.Location)
                         .WithMany(e => e.Users)
                         .HasForeignKey(e => e.LocationId);
+
+                entity.HasOne<Authentication>(e => e.Authentication)
+                        .WithOne(e => e.User)
+                        .HasForeignKey<User>(e => e.AuthId);
             });
 
             modelBuilder.Entity<Location>(entity =>
             {
                 entity.HasKey(e => e.LocationId);
                 entity.Property(e => e.LocationId).ValueGeneratedOnAdd();
-                entity.Property(e => e.City).HasMaxLength(50);
-                entity.Property(e => e.Province).HasMaxLength(50);
+                
+                entity.HasOne<City>(e => e.City)
+                        .WithMany(e => e.Location)
+                        .HasForeignKey(e => e.CityId);
+
+                entity.HasOne<Province>(e => e.Province)
+                        .WithMany(e => e.Location)
+                        .HasForeignKey(e => e.ProvinceId);
+            });
+
+            modelBuilder.Entity<City>(entity =>
+            {
+                entity.HasKey(e => e.CityId);
+                entity.Property(e => e.CityId).ValueGeneratedOnAdd();
+            });
+
+            modelBuilder.Entity<Province>(entity =>
+            {
+                entity.HasKey(e => e.ProvinceId);
+                entity.Property(e => e.ProvinceId).ValueGeneratedOnAdd();
             });
 
             modelBuilder.Entity<Image>(entity =>
