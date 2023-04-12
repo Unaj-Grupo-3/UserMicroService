@@ -13,7 +13,6 @@ namespace Infrastructure.Persistance
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Location> Locations { get; set; }
-        public DbSet<Gender> Genders { get; set; }
         public DbSet<Image> Images { get; set; }
         public DbSet<Authentication> Authentication { get; set; }
         public DbSet<City> Cities { get; set; }
@@ -43,6 +42,11 @@ namespace Infrastructure.Persistance
                 entity.HasOne<Authentication>(e => e.Authentication)
                         .WithOne(e => e.User)
                         .HasForeignKey<User>(e => e.AuthId);
+            });
+
+            modelBuilder.Entity<Authentication>(entity =>
+            {
+                entity.HasKey(e => e.AuthId);
             });
 
             modelBuilder.Entity<Location>(entity =>
@@ -78,13 +82,6 @@ namespace Infrastructure.Persistance
                 entity.HasOne<User>(e => e.User)
                     .WithMany(e => e.Images)
                     .HasForeignKey(e => e.UserId);
-            });
-
-            modelBuilder.Entity<Gender>(entity =>
-            {
-                entity.HasKey(e => e.GenderId);
-                entity.Property(e => e.GenderId).ValueGeneratedOnAdd();
-                entity.Property(e => e.Description).HasMaxLength(50);
             });
         }
     }
