@@ -22,10 +22,10 @@ namespace Presentacion.Controllers
         public async Task<IActionResult> CreateUser(UserReq req)
         {
             //¿ Validar request ?
-            await _userServices.AddUser(req);
+            var response = await _userServices.AddUser(req);
 
             //Mejorar respuesta
-            return new JsonResult(new { result = "Se ha creado el usuario exitosamente." }) { StatusCode = 201 };
+            return new JsonResult(new { Message = "Se ha creado el usuario exitosamente.", Response = response }) { StatusCode = 201 };
         }
     }
 }
