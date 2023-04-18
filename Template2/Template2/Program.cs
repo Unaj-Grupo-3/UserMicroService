@@ -4,7 +4,10 @@ using Infrastructure.Commands;
 using Infrastructure.Persistance;
 using Infrastructure.Queries;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using System.Runtime.InteropServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +22,22 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 //Custom
-var connectionString = builder.Configuration["ConnectionString"];
+var connectionString = "";
+Console.WriteLine(Directory.GetCurrentDirectory());
+var gab = "C:\\Users\\Gabo\\Documents\\Backup\\unaj\\ProyectoDeSoftware_1\\2023-Primer-cuatri\\Grupal\\AppDeCitas\\UserMicroService2\\Template2\\Template2";
+
+if(Directory.GetCurrentDirectory() == gab)
+{
+    connectionString =
+        builder.Configuration["ConnectionString2"];
+}
+else 
+{
+    // MSSQL running locally
+    connectionString = builder.Configuration["ConnectionString"];
+}
+
+
 builder.Services.AddDbContext<ExpresoDbContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddTransient<IUserCommands, UserCommands>();

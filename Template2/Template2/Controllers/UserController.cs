@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Presentacion.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -19,7 +19,7 @@ namespace Presentacion.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateUser(UserReq req)
+        public async Task<IActionResult> User(UserReq req)
         {
             //¿ Validar request ?
             var response = await _userServices.AddUser(req);
