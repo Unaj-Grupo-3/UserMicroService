@@ -46,6 +46,7 @@ builder.Services.AddTransient<IAuthCommands, AuthCommands>();
 builder.Services.AddTransient<IAuthQueries, AuthQueries>();
 builder.Services.AddTransient<IAuthServices, AuthServices>();
 builder.Services.AddTransient<IEncryptServices, EncryptServices>();
+builder.Services.AddTransient<IValidateServices, ValidateServices>();
 
 var app = builder.Build();
 

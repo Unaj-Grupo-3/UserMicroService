@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Application.Models;
+using Azure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,22 +11,39 @@ namespace Presentacion.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserServices _userServices;
-        private readonly IAuthServices _authServices;
+        private readonly IValidateServices _validateServices;
 
-        public UserController(IUserServices userServices, IAuthServices authServices)
+        public UserController(IUserServices userServices, IValidateServices validateServices)
         {
             _userServices = userServices;
-            _authServices = authServices;
+            _validateServices = validateServices;
         }
 
         [HttpPost]
         public async Task<IActionResult> User(UserReq req)
         {
-            //¿ Validar request ?
-            var response = await _userServices.AddUser(req);
+            try
+            {
+                var diccio = _validateServices.Validate(req).Result;
 
-            //Mejorar respuesta
-            return new JsonResult(new { Message = "Se ha creado el usuario exitosamente.", Response = response }) { StatusCode = 201 };
+                if (diccio.ElementAt(0).Key)
+                {
+                    var response = await _userServices.AddUser(req);
+                    return new JsonResult(new { Message = "Se ha creado el usuario exitosamente.", Response = response }) { StatusCode = 201 };
+                }
+                else
+                {
+                    var errores = diccio.ElementAt(0).Value;
+                    return new JsonResult(new { Message = "Existen errores en la petición.", Response = errores }) { StatusCode = 400 };
+                }
+            }
+            catch (Microsoft.Data.SqlClient.SqlException)
+            {
+                return new JsonResult(new { Message = "Se ha producido un error interno en el servidor."}) { StatusCode = 500 };
+            }
+                
+
+
         }
     }
 }
