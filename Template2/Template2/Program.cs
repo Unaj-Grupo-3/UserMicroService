@@ -43,6 +43,7 @@ builder.Services.AddDbContext<ExpresoDbContext>(options => options.UseSqlServer(
 
 builder.Services.AddTransient<IUserCommands, UserCommands>();
 builder.Services.AddTransient<IUserServices, UserServices>();
+builder.Services.AddTransient<IUserQueries, UserQueries>(); 
 builder.Services.AddTransient<IAuthCommands, AuthCommands>();
 builder.Services.AddTransient<IAuthQueries, AuthQueries>();
 builder.Services.AddTransient<IAuthServices, AuthServices>();
