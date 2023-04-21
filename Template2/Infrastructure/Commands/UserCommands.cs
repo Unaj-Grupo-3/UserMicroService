@@ -18,11 +18,13 @@ namespace Infrastructure.Commands
             _context = context;
         }
 
-        public async Task InsertUser(User user)
+        public async Task<User> InsertUser(User user)
         {
             _context.Add(user);
 
             await _context.SaveChangesAsync();
+
+            return user;
         }
     }
 }

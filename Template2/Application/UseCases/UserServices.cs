@@ -1,11 +1,6 @@
 ﻿using Application.Interfaces;
 using Application.Models;
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.UseCases
 {
@@ -22,6 +17,7 @@ namespace Application.UseCases
 
         public async Task<UserResponse> AddUser(UserReq req)
         {
+
             await _authServices.CreateAuthentication(req.AuthReq);
 
             var auth = await _authServices.GetAuthentication(req.AuthReq);
@@ -36,15 +32,16 @@ namespace Application.UseCases
                 AuthId = auth.Id
             };
 
-            await _commands.InsertUser(user);
+            User create = await _commands.InsertUser(user);
 
             UserResponse resp = new UserResponse
             {
-                Name = req.Name,
-                LastName = req.LastName,
-                Birthday = req.Birthday,
-                Description = req.Description,
-                Gender = req.Gender
+                UserId = create.UserId,
+                Name = create.Name,
+                LastName = create.LastName,
+                Birthday = create.Birthday,
+                Description = create.Description,
+                Gender = create.Gender
             };
 
             return resp;
