@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Application.Models
 {
     public class UserReq
@@ -14,5 +9,6 @@ namespace Application.Models
         public string Description { get; set; }
         public string Gender { get; set; }
         public AuthReq AuthReq { get; set; }
+        public IList<string> Images { get; set; }
     }
 }
