@@ -5,6 +5,10 @@ namespace Application.Interfaces
 {
     public interface IImageCommands
     {
-        public Task InsertImage(Image image);
+        Task InsertImage(Image image);
+
+        Task UpdateImage(Image image);
+
+        Task DeleteImage(Image image);
     }
 }

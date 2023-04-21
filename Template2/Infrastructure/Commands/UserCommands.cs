@@ -1,11 +1,8 @@
 ﻿using Application.Interfaces;
+using Application.Models;
 using Domain.Entities;
 using Infrastructure.Persistance;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Commands
 {
@@ -25,6 +22,21 @@ namespace Infrastructure.Commands
             await _context.SaveChangesAsync();
 
             return user;
+        }
+
+        public async Task<User> UpdateUser(int userId, UserReq user)
+        {
+            User updated = await _context.Users.FirstOrDefaultAsync(x => x.UserId == userId);
+
+            updated.Name = user.Name != null ? user.Name : updated.Name;
+            updated.LastName = user.LastName != null ? user.LastName : updated.LastName;
+            updated.Birthday = user.Birthday != null ? user.Birthday.Value : updated.Birthday;
+            updated.Gender = user.Gender != null ? user.Gender : updated.Gender;
+            updated.Description = user.Description != null ? user.Description : updated.Description;
+
+            await _context.SaveChangesAsync();
+
+            return updated;
         }
     }
 }
