@@ -26,16 +26,25 @@ namespace Application.UseCases
 
         public async Task<bool> CreateAuth(AuthReq req)
         {
-            var content = JsonContent.Create(req);
-            var responseAuth = await _httpClient.PostAsync(_url, content);
+            try
+            {
+                var content = JsonContent.Create(req);
+                var responseAuth = await _httpClient.PostAsync(_url, content);
 
-            var responseContent = await responseAuth.Content.ReadAsStringAsync();
-            var responseObject = JsonDocument.Parse(responseContent).RootElement;
-            _message = responseObject.GetProperty("message").GetString();
-            _response = responseObject.GetProperty("response").ToString();
-            _statusCode = (int)responseAuth.StatusCode;
+                var responseContent = await responseAuth.Content.ReadAsStringAsync();
+                var responseObject = JsonDocument.Parse(responseContent).RootElement;
+                _message = responseObject.GetProperty("message").GetString();
+                _response = responseObject.GetProperty("response").ToString();
+                _statusCode = (int)responseAuth.StatusCode;
 
-            return responseAuth.IsSuccessStatusCode;
+                return responseAuth.IsSuccessStatusCode;
+            }
+            catch(System.Net.Http.HttpRequestException ex)
+            {
+                _message = "Error en el microservicio de autenticación";
+                _statusCode = 500;
+                return false;
+            }
         }
 
         public string GetMessage()
@@ -45,6 +54,11 @@ namespace Application.UseCases
 
         public JsonDocument GetResponse()
         {
+            if (_response == null)
+            {
+                return JsonDocument.Parse("{}");
+            }
+
             return JsonDocument.Parse(_response);
         }
 

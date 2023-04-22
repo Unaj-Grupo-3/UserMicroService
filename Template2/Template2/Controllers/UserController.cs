@@ -1,11 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Models;
-using Azure;
-using Castle.MicroKernel.Util;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
-using System.Security.Cryptography.X509Certificates;
-using System.Net.Security;
+
 
 namespace Presentacion.Controllers
 {
@@ -53,7 +49,12 @@ namespace Presentacion.Controllers
         {
             try
             {
-                var diccio = _validateServices.Validate(req).Result;
+                var diccio = _validateServices.Validate(req, false).Result;
+
+                if (req.Images == null || req.Images.Count == 0)
+                {
+                    return new JsonResult(new { Message = "Es necesario ingresar una foto." }) { StatusCode = 400 };
+                }
 
                 if (req.Images.Count > 6)
                 {
@@ -115,38 +116,52 @@ namespace Presentacion.Controllers
                     return new JsonResult(new {Message = $"No existe el usuario con el id {id}"}) { StatusCode = 404 };   
                 }
 
-                // Validar longitudes de string que no son null.
+                var diccio = _validateServices.Validate(req, true).Result;
 
-                IList<string> imagesUpdate = new List<string>();    
+                var algo = diccio.ElementAt(0).Key;
 
-                if(req.Images != null)
+                if (diccio.ElementAt(0).Key)
                 {
-                    if (req.Images.Count > 6)
-                    {
-                        return new JsonResult(new { Message = "Solo se permiten 6 fotos." }) { StatusCode = 400 };
-                    }
+                    IList<string> imagesUpdate = new List<string>();
 
-                    foreach (var url in req.Images)
+                    if (req.Images != null)
                     {
-                        var errorImage = await _validateImageServices.ValidateUrl(url);
-
-                        if (!errorImage)
+                        if (req.Images.Count == 0)
                         {
-                            return new JsonResult(_validateImageServices.GetErrors()) { StatusCode = 400 };
+                            return new JsonResult(new { Message = "Es necesario ingresar una foto." }) { StatusCode = 400 };
                         }
+
+                        if (req.Images.Count > 6)
+                        {
+                            return new JsonResult(new { Message = "Solo se permiten 6 fotos." }) { StatusCode = 400 };
+                        }
+
+                        foreach (var url in req.Images)
+                        {
+                            var errorImage = await _validateImageServices.ValidateUrl(url);
+
+                            if (!errorImage)
+                            {
+                                return new JsonResult(_validateImageServices.GetErrors()) { StatusCode = 400 };
+                            }
+                        }
+
+                        imagesUpdate = await _imageServices.UpdateImages(id, req.Images);
                     }
 
-                    imagesUpdate = await _imageServices.UpdateImages(id, req.Images);
+                    var response = await _userServices.UpdateUser(id, req);
+
+                    if (imagesUpdate.Count > 0)
+                    {
+                        response.Images = imagesUpdate;
+                    }
+                    return new JsonResult(new { Message = "Se ha actualizado el usuario exitosamente.", Response = response }) { StatusCode = 200 };
                 }
-
-                var response = await _userServices.UpdateUser(id, req);
-
-                if (imagesUpdate.Count > 0)
+                else
                 {
-                    response.Images = imagesUpdate;
+                    var errores = diccio.ElementAt(0).Value;
+                    return new JsonResult(new { Message = "Existen errores en la petición.", Response = errores }) { StatusCode = 400 };
                 }
-
-                return new JsonResult(response) { StatusCode = 200};
             }
             catch (Microsoft.Data.SqlClient.SqlException)
             {
