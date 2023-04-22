@@ -3,6 +3,9 @@ using Application.Models;
 using Azure;
 using Castle.MicroKernel.Util;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
+using System.Security.Cryptography.X509Certificates;
+using System.Net.Security;
 
 namespace Presentacion.Controllers
 {
@@ -14,13 +17,15 @@ namespace Presentacion.Controllers
         private readonly IValidateServices _validateServices;
         private readonly IImageServices _imageServices;
         private readonly IValidateImageServices _validateImageServices;
+        private readonly IAuthApiServices _authApiServices;
 
-        public UserController(IUserServices userServices, IValidateServices validateServices, IImageServices imageServices, IValidateImageServices validateImageServices)
+        public UserController(IUserServices userServices, IValidateServices validateServices, IImageServices imageServices, IValidateImageServices validateImageServices, IAuthApiServices authApiServices)
         {
             _userServices = userServices;
             _validateServices = validateServices;
             _imageServices = imageServices;
             _validateImageServices = validateImageServices;
+            _authApiServices = authApiServices;
         }
 
         [HttpGet("{id}")]
@@ -67,8 +72,17 @@ namespace Presentacion.Controllers
 
                 if (diccio.ElementAt(0).Key)
                 {
-                    var response = await _userServices.AddUser(req);
 
+                    bool postIsValid = await _authApiServices.CreateAuth(req.AuthReq);
+
+                    if (!postIsValid)
+                    {
+                        return new JsonResult(new { Message = _authApiServices.GetMessage(), Response = _authApiServices.GetResponse() }) { StatusCode = _authApiServices.GetStatusCode() };
+                    }
+
+                    Guid authId = Guid.Parse(_authApiServices.GetResponse().RootElement.GetProperty("id").GetString());
+
+                    var response = await _userServices.AddUser(req, authId);
                     var images = await _imageServices.AddImages(response.UserId,req.Images);
 
                     response.Images = images;
