@@ -7,22 +7,16 @@ namespace Application.UseCases
     public class UserServices : IUserServices
     {
         private readonly IUserCommands _commands;
-        private readonly IAuthServices _authServices;
         private readonly IUserQueries _queries;
 
-        public UserServices(IUserCommands commands,IUserQueries userQueries, IAuthServices authServices)
+        public UserServices(IUserCommands commands,IUserQueries userQueries)
         {
             _commands = commands;
-            _authServices = authServices;
             _queries = userQueries;
         }
 
-        public async Task<UserResponse> AddUser(UserReq req)
+        public async Task<UserResponse> AddUser(UserReq req, Guid authId)
         {
-
-            await _authServices.CreateAuthentication(req.AuthReq);
-
-            var auth = await _authServices.GetAuthentication(req.AuthReq);
 
             User user = new User
             {
@@ -31,7 +25,7 @@ namespace Application.UseCases
                 Birthday = req.Birthday.Value,
                 Description = req.Description,
                 Gender = req.Gender,
-                AuthId = auth.Id
+                AuthId = authId
             };
 
             User create = await _commands.InsertUser(user);

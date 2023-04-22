@@ -14,7 +14,6 @@ namespace Infrastructure.Persistance
         public DbSet<User> Users { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<Image> Images { get; set; }
-        public DbSet<Authentication> Authentication { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Province> Provinces { get; set; }
 
@@ -39,15 +38,8 @@ namespace Infrastructure.Persistance
                         .WithMany(e => e.Users)
                         .HasForeignKey(e => e.LocationId);
 
-                entity.HasOne<Authentication>(e => e.Authentication)
-                        .WithOne(e => e.User)
-                        .HasForeignKey<User>(e => e.AuthId);
             });
 
-            modelBuilder.Entity<Authentication>(entity =>
-            {
-                entity.HasKey(e => e.AuthId);
-            });
 
             modelBuilder.Entity<Location>(entity =>
             {
