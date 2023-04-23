@@ -12,6 +12,5 @@
         public Guid AuthId { get; set; }
         public Location? Location { get; set; }
         public IList<Image>? Images { get; set; }
-        public Authentication Authentication { get; set; }
     }
 }

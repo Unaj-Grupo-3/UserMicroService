@@ -1,14 +1,12 @@
-﻿using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Application.Models;
+using Domain.Entities;
 
 namespace Application.Interfaces
 {
     public interface IUserCommands
     {
-        Task InsertUser(User user);
+        Task<User> InsertUser(User user);
+
+        Task<User> UpdateUser(int userId, UserReq user);
     }
 }

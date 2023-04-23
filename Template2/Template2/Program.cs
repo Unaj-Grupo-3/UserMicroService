@@ -38,15 +38,19 @@ else
 }
 
 
+Console.WriteLine(connectionString);
 builder.Services.AddDbContext<ExpresoDbContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddTransient<IUserCommands, UserCommands>();
 builder.Services.AddTransient<IUserServices, UserServices>();
-builder.Services.AddTransient<IAuthCommands, AuthCommands>();
-builder.Services.AddTransient<IAuthQueries, AuthQueries>();
-builder.Services.AddTransient<IAuthServices, AuthServices>();
+builder.Services.AddTransient<IUserQueries, UserQueries>(); 
 builder.Services.AddTransient<IEncryptServices, EncryptServices>();
 builder.Services.AddTransient<IValidateServices, ValidateServices>();
+builder.Services.AddTransient<IImageCommands, ImageCommands>();
+builder.Services.AddTransient<IImageQueries, ImageQueries>();
+builder.Services.AddTransient<IImageServices, ImageServices>();
+builder.Services.AddTransient<IValidateImageServices, ValidateImageServices>();
+builder.Services.AddTransient<IAuthApiServices, AuthApiServices>();
 
 var app = builder.Build();
 
