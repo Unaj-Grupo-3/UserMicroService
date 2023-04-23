@@ -6,25 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class gender : Migration
+    public partial class errorauthid : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Authentication",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Authentication", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Cities",
                 columns: table => new
@@ -95,12 +81,6 @@ namespace Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Users", x => x.UserId);
                     table.ForeignKey(
-                        name: "FK_Users_Authentication_AuthId",
-                        column: x => x.AuthId,
-                        principalTable: "Authentication",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_Users_Locations_LocationId",
                         column: x => x.LocationId,
                         principalTable: "Locations",
@@ -114,7 +94,8 @@ namespace Infrastructure.Migrations
                     ImageId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Order = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -143,12 +124,6 @@ namespace Infrastructure.Migrations
                 column: "ProvinceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_AuthId",
-                table: "Users",
-                column: "AuthId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Users_LocationId",
                 table: "Users",
                 column: "LocationId");
@@ -162,9 +137,6 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "Authentication");
 
             migrationBuilder.DropTable(
                 name: "Locations");
