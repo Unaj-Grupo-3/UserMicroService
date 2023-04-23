@@ -33,7 +33,7 @@ namespace Infrastructure.Persistance
                 entity.Property(e => e.Name).HasMaxLength(50);
                 entity.Property(e => e.LastName).HasMaxLength(50);
                 entity.Property(e => e.Description).HasMaxLength(255);
-
+                entity.Property(e => e.Birthday).HasColumnType("date");
                 entity.HasOne<Location>(l => l.Location)
                         .WithMany(e => e.Users)
                         .HasForeignKey(e => e.LocationId);

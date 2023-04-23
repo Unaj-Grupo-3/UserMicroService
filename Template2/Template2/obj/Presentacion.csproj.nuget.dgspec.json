@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Gabo\\Documents\\Backup\\unaj\\ProyectoDeSoftware_1\\2023-Primer-cuatri\\Grupal\\AppDeCitas\\UserMicroService2\\Template2\\Template2\\Presentacion.csproj": {}
+    "C:\\Users\\LopezFranco\\Desktop\\Proyecto Sofware 2023\\ExpressoDelasDiez\\UserMicroService2\\Template2\\Template2\\Presentacion.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Gabo\\Documents\\Backup\\unaj\\ProyectoDeSoftware_1\\2023-Primer-cuatri\\Grupal\\AppDeCitas\\UserMicroService2\\Template2\\Application\\Application.csproj": {
+    "C:\\Users\\LopezFranco\\Desktop\\Proyecto Sofware 2023\\ExpressoDelasDiez\\UserMicroService2\\Template2\\Application\\Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Gabo\\Documents\\Backup\\unaj\\ProyectoDeSoftware_1\\2023-Primer-cuatri\\Grupal\\AppDeCitas\\UserMicroService2\\Template2\\Application\\Application.csproj",
+        "projectUniqueName": "C:\\Users\\LopezFranco\\Desktop\\Proyecto Sofware 2023\\ExpressoDelasDiez\\UserMicroService2\\Template2\\Application\\Application.csproj",
         "projectName": "Application",
-        "projectPath": "C:\\Users\\Gabo\\Documents\\Backup\\unaj\\ProyectoDeSoftware_1\\2023-Primer-cuatri\\Grupal\\AppDeCitas\\UserMicroService2\\Template2\\Application\\Application.csproj",
-        "packagesPath": "C:\\Users\\Gabo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Gabo\\Documents\\Backup\\unaj\\ProyectoDeSoftware_1\\2023-Primer-cuatri\\Grupal\\AppDeCitas\\UserMicroService2\\Template2\\Application\\obj\\",
+        "projectPath": "C:\\Users\\LopezFranco\\Desktop\\Proyecto Sofware 2023\\ExpressoDelasDiez\\UserMicroService2\\Template2\\Application\\Application.csproj",
+        "packagesPath": "C:\\Users\\LopezFranco\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\LopezFranco\\Desktop\\Proyecto Sofware 2023\\ExpressoDelasDiez\\UserMicroService2\\Template2\\Application\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Gabo\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\LopezFranco\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -32,8 +28,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "C:\\Users\\Gabo\\Documents\\Backup\\unaj\\ProyectoDeSoftware_1\\2023-Primer-cuatri\\Grupal\\AppDeCitas\\UserMicroService2\\Template2\\Domain\\Domain.csproj": {
-                "projectPath": "C:\\Users\\Gabo\\Documents\\Backup\\unaj\\ProyectoDeSoftware_1\\2023-Primer-cuatri\\Grupal\\AppDeCitas\\UserMicroService2\\Template2\\Domain\\Domain.csproj"
+              "C:\\Users\\LopezFranco\\Desktop\\Proyecto Sofware 2023\\ExpressoDelasDiez\\UserMicroService2\\Template2\\Domain\\Domain.csproj": {
+                "projectPath": "C:\\Users\\LopezFranco\\Desktop\\Proyecto Sofware 2023\\ExpressoDelasDiez\\UserMicroService2\\Template2\\Domain\\Domain.csproj"
               }
             }
           }
@@ -59,8 +55,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -69,25 +64,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.200\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\Gabo\\Documents\\Backup\\unaj\\ProyectoDeSoftware_1\\2023-Primer-cuatri\\Grupal\\AppDeCitas\\UserMicroService2\\Template2\\Domain\\Domain.csproj": {
+    "C:\\Users\\LopezFranco\\Desktop\\Proyecto Sofware 2023\\ExpressoDelasDiez\\UserMicroService2\\Template2\\Domain\\Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Gabo\\Documents\\Backup\\unaj\\ProyectoDeSoftware_1\\2023-Primer-cuatri\\Grupal\\AppDeCitas\\UserMicroService2\\Template2\\Domain\\Domain.csproj",
+        "projectUniqueName": "C:\\Users\\LopezFranco\\Desktop\\Proyecto Sofware 2023\\ExpressoDelasDiez\\UserMicroService2\\Template2\\Domain\\Domain.csproj",
         "projectName": "Domain",
-        "projectPath": "C:\\Users\\Gabo\\Documents\\Backup\\unaj\\ProyectoDeSoftware_1\\2023-Primer-cuatri\\Grupal\\AppDeCitas\\UserMicroService2\\Template2\\Domain\\Domain.csproj",
-        "packagesPath": "C:\\Users\\Gabo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Gabo\\Documents\\Backup\\unaj\\ProyectoDeSoftware_1\\2023-Primer-cuatri\\Grupal\\AppDeCitas\\UserMicroService2\\Template2\\Domain\\obj\\",
+        "projectPath": "C:\\Users\\LopezFranco\\Desktop\\Proyecto Sofware 2023\\ExpressoDelasDiez\\UserMicroService2\\Template2\\Domain\\Domain.csproj",
+        "packagesPath": "C:\\Users\\LopezFranco\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\LopezFranco\\Desktop\\Proyecto Sofware 2023\\ExpressoDelasDiez\\UserMicroService2\\Template2\\Domain\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Gabo\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\LopezFranco\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -118,8 +109,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -128,25 +118,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.200\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\Gabo\\Documents\\Backup\\unaj\\ProyectoDeSoftware_1\\2023-Primer-cuatri\\Grupal\\AppDeCitas\\UserMicroService2\\Template2\\Infrastructure\\Infrastructure.csproj": {
+    "C:\\Users\\LopezFranco\\Desktop\\Proyecto Sofware 2023\\ExpressoDelasDiez\\UserMicroService2\\Template2\\Infrastructure\\Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Gabo\\Documents\\Backup\\unaj\\ProyectoDeSoftware_1\\2023-Primer-cuatri\\Grupal\\AppDeCitas\\UserMicroService2\\Template2\\Infrastructure\\Infrastructure.csproj",
+        "projectUniqueName": "C:\\Users\\LopezFranco\\Desktop\\Proyecto Sofware 2023\\ExpressoDelasDiez\\UserMicroService2\\Template2\\Infrastructure\\Infrastructure.csproj",
         "projectName": "Infrastructure",
-        "projectPath": "C:\\Users\\Gabo\\Documents\\Backup\\unaj\\ProyectoDeSoftware_1\\2023-Primer-cuatri\\Grupal\\AppDeCitas\\UserMicroService2\\Template2\\Infrastructure\\Infrastructure.csproj",
-        "packagesPath": "C:\\Users\\Gabo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Gabo\\Documents\\Backup\\unaj\\ProyectoDeSoftware_1\\2023-Primer-cuatri\\Grupal\\AppDeCitas\\UserMicroService2\\Template2\\Infrastructure\\obj\\",
+        "projectPath": "C:\\Users\\LopezFranco\\Desktop\\Proyecto Sofware 2023\\ExpressoDelasDiez\\UserMicroService2\\Template2\\Infrastructure\\Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\LopezFranco\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\LopezFranco\\Desktop\\Proyecto Sofware 2023\\ExpressoDelasDiez\\UserMicroService2\\Template2\\Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Gabo\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\LopezFranco\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -160,8 +146,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "C:\\Users\\Gabo\\Documents\\Backup\\unaj\\ProyectoDeSoftware_1\\2023-Primer-cuatri\\Grupal\\AppDeCitas\\UserMicroService2\\Template2\\Application\\Application.csproj": {
-                "projectPath": "C:\\Users\\Gabo\\Documents\\Backup\\unaj\\ProyectoDeSoftware_1\\2023-Primer-cuatri\\Grupal\\AppDeCitas\\UserMicroService2\\Template2\\Application\\Application.csproj"
+              "C:\\Users\\LopezFranco\\Desktop\\Proyecto Sofware 2023\\ExpressoDelasDiez\\UserMicroService2\\Template2\\Application\\Application.csproj": {
+                "projectPath": "C:\\Users\\LopezFranco\\Desktop\\Proyecto Sofware 2023\\ExpressoDelasDiez\\UserMicroService2\\Template2\\Application\\Application.csproj"
               }
             }
           }
@@ -193,8 +179,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -203,25 +188,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.200\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\Gabo\\Documents\\Backup\\unaj\\ProyectoDeSoftware_1\\2023-Primer-cuatri\\Grupal\\AppDeCitas\\UserMicroService2\\Template2\\Template2\\Presentacion.csproj": {
+    "C:\\Users\\LopezFranco\\Desktop\\Proyecto Sofware 2023\\ExpressoDelasDiez\\UserMicroService2\\Template2\\Template2\\Presentacion.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Gabo\\Documents\\Backup\\unaj\\ProyectoDeSoftware_1\\2023-Primer-cuatri\\Grupal\\AppDeCitas\\UserMicroService2\\Template2\\Template2\\Presentacion.csproj",
+        "projectUniqueName": "C:\\Users\\LopezFranco\\Desktop\\Proyecto Sofware 2023\\ExpressoDelasDiez\\UserMicroService2\\Template2\\Template2\\Presentacion.csproj",
         "projectName": "Presentacion",
-        "projectPath": "C:\\Users\\Gabo\\Documents\\Backup\\unaj\\ProyectoDeSoftware_1\\2023-Primer-cuatri\\Grupal\\AppDeCitas\\UserMicroService2\\Template2\\Template2\\Presentacion.csproj",
-        "packagesPath": "C:\\Users\\Gabo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Gabo\\Documents\\Backup\\unaj\\ProyectoDeSoftware_1\\2023-Primer-cuatri\\Grupal\\AppDeCitas\\UserMicroService2\\Template2\\Template2\\obj\\",
+        "projectPath": "C:\\Users\\LopezFranco\\Desktop\\Proyecto Sofware 2023\\ExpressoDelasDiez\\UserMicroService2\\Template2\\Template2\\Presentacion.csproj",
+        "packagesPath": "C:\\Users\\LopezFranco\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\LopezFranco\\Desktop\\Proyecto Sofware 2023\\ExpressoDelasDiez\\UserMicroService2\\Template2\\Template2\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Gabo\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\LopezFranco\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -235,8 +216,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "C:\\Users\\Gabo\\Documents\\Backup\\unaj\\ProyectoDeSoftware_1\\2023-Primer-cuatri\\Grupal\\AppDeCitas\\UserMicroService2\\Template2\\Infrastructure\\Infrastructure.csproj": {
-                "projectPath": "C:\\Users\\Gabo\\Documents\\Backup\\unaj\\ProyectoDeSoftware_1\\2023-Primer-cuatri\\Grupal\\AppDeCitas\\UserMicroService2\\Template2\\Infrastructure\\Infrastructure.csproj"
+              "C:\\Users\\LopezFranco\\Desktop\\Proyecto Sofware 2023\\ExpressoDelasDiez\\UserMicroService2\\Template2\\Infrastructure\\Infrastructure.csproj": {
+                "projectPath": "C:\\Users\\LopezFranco\\Desktop\\Proyecto Sofware 2023\\ExpressoDelasDiez\\UserMicroService2\\Template2\\Infrastructure\\Infrastructure.csproj"
               }
             }
           }
@@ -280,8 +261,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -293,7 +273,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.200\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     }
