@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ExpresoDbContext))]
-    [Migration("20230418220249_cs2")]
-    partial class cs2
+    [Migration("20230423144024_error authid")]
+    partial class errorauthid
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,29 +24,6 @@ namespace Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Domain.Entities.Authentication", b =>
-                {
-                    b.Property<Guid>("AuthId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<byte[]>("PasswordSalt")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.HasKey("AuthId");
-
-                    b.ToTable("Authentication");
-                });
 
             modelBuilder.Entity("Domain.Entities.City", b =>
                 {
@@ -168,9 +145,6 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("UserId");
 
-                    b.HasIndex("AuthId")
-                        .IsUnique();
-
                     b.HasIndex("LocationId");
 
                     b.ToTable("Users");
@@ -208,25 +182,11 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
-                    b.HasOne("Domain.Entities.Authentication", "Authentication")
-                        .WithOne("User")
-                        .HasForeignKey("Domain.Entities.User", "AuthId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Domain.Entities.Location", "Location")
                         .WithMany("Users")
                         .HasForeignKey("LocationId");
 
-                    b.Navigation("Authentication");
-
                     b.Navigation("Location");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Authentication", b =>
-                {
-                    b.Navigation("User")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Entities.City", b =>
