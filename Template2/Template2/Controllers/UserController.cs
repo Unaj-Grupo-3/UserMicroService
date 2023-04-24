@@ -168,5 +168,25 @@ namespace Presentacion.Controllers
                 return new JsonResult(new { Message = "Se ha producido un error interno en el servidor." }) { StatusCode = 500 };
             }
         }
+        [HttpGet("api/users/{name?}")]
+        public async Task<IActionResult> GetAll(string? name=null)
+        {
+            try
+            {
+                var users = await _userServices.GetByFirstName(name);
+
+                if (users == null)
+                {
+                    return NotFound();
+                }
+
+                return new JsonResult(users);
+                
+            }
+            catch (Exception)
+            {
+                return new JsonResult(new { Message = "Se ha producido un error interno en el servidor." }) { StatusCode = 500 };
+            }
+        }
     }
 }
