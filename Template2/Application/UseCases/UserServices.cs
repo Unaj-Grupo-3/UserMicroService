@@ -101,5 +101,41 @@ namespace Application.UseCases
 
             return response;
         }
+
+        public async Task<List<UserResponse>> GetByFirstName(string? userFirstName)
+        {
+            var users = await _queries.GetByFirstName(userFirstName);
+
+            List<UserResponse> userResponse = new List<UserResponse>();
+
+            if (users.Count == 0)
+            {
+                return null;
+            }
+            foreach (var user in users)
+            {
+                List<string> images = new List<string>();
+
+                if (user.Images != null)
+                {
+                    foreach (var image in user.Images)
+                    {
+                        images.Add(image.Url);
+                    }
+                }
+                UserResponse response = new UserResponse
+                {
+                    UserId = user.UserId,
+                    Name = user.Name,
+                    LastName = user.LastName,
+                    Birthday = user.Birthday,
+                    Gender = user.Gender,
+                    Description = user.Description,
+                    Images = images
+                };
+                userResponse.Add(response);
+            }
+            return userResponse;
+        }
     }
 }
