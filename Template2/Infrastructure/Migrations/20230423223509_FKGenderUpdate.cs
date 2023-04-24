@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class errorauthid : Migration
+    public partial class FKGenderUpdate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -22,6 +22,19 @@ namespace Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Cities", x => x.CityId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Gender",
+                columns: table => new
+                {
+                    GenderId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Gender", x => x.GenderId);
                 });
 
             migrationBuilder.CreateTable(
@@ -74,12 +87,18 @@ namespace Infrastructure.Migrations
                     Birthday = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     LocationId = table.Column<int>(type: "int", nullable: true),
-                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    GenderId = table.Column<int>(type: "int", nullable: false),
                     AuthId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.UserId);
+                    table.ForeignKey(
+                        name: "FK_Users_Gender_GenderId",
+                        column: x => x.GenderId,
+                        principalTable: "Gender",
+                        principalColumn: "GenderId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Users_Locations_LocationId",
                         column: x => x.LocationId,
@@ -124,6 +143,12 @@ namespace Infrastructure.Migrations
                 column: "ProvinceId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Users_GenderId",
+                table: "Users",
+                column: "GenderId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_LocationId",
                 table: "Users",
                 column: "LocationId");
@@ -137,6 +162,9 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Gender");
 
             migrationBuilder.DropTable(
                 name: "Locations");

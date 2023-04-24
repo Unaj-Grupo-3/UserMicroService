@@ -1,12 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "XmkkbeTPrQmA7F4FCRCF9SHLIHeMuw/6klrWD31G9yGLE968xRy/C5HiHTW9UmP96mt3rlJn5jps+qK9pqWd/w==",
+  "dgSpecHash": "AmYGzatOcCbsXtQi9kRSk/LUFiXgYTwGaYbq4yIJOFhbGuvuND2pCK3Bg/vM+uyTHZ+seNGqUhCgDB6ETnbhtA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Gabo\\Documents\\Backup\\unaj\\ProyectoDeSoftware_1\\2023-Primer-cuatri\\Grupal\\AppDeCitas\\UserMicroService2\\Template2\\Application\\Application.csproj",
+  "projectFilePath": "C:\\Users\\Marcos Sosa\\source\\repos\\ExpressoDeLasDiez\\UserMicroService2\\Template2\\Application\\Application.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Gabo\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",
-    "C:\\Users\\Gabo\\.nuget\\packages\\microsoft.extensions.primitives\\5.0.1\\microsoft.extensions.primitives.5.0.1.nupkg.sha512",
-    "C:\\Users\\Gabo\\.nuget\\packages\\system.io.pipelines\\5.0.2\\system.io.pipelines.5.0.2.nupkg.sha512"
+    "C:\\Users\\Marcos Sosa\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",
+    "C:\\Users\\Marcos Sosa\\.nuget\\packages\\microsoft.extensions.primitives\\5.0.1\\microsoft.extensions.primitives.5.0.1.nupkg.sha512",
+    "C:\\Users\\Marcos Sosa\\.nuget\\packages\\system.io.pipelines\\5.0.2\\system.io.pipelines.5.0.2.nupkg.sha512"
   ],
   "logs": []
 }

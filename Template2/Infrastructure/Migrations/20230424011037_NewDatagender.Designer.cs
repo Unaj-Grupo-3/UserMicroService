@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ExpresoDbContext))]
-    [Migration("20230423144024_error authid")]
-    partial class errorauthid
+    [Migration("20230424011037_NewDatagender")]
+    partial class NewDatagender
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,6 +40,41 @@ namespace Infrastructure.Migrations
                     b.HasKey("CityId");
 
                     b.ToTable("Cities");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Gender", b =>
+                {
+                    b.Property<int>("GenderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GenderId"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("GenderId");
+
+                    b.ToTable("Gender");
+
+                    b.HasData(
+                        new
+                        {
+                            GenderId = 1,
+                            Description = "Masculino"
+                        },
+                        new
+                        {
+                            GenderId = 2,
+                            Description = "Femenino"
+                        },
+                        new
+                        {
+                            GenderId = 3,
+                            Description = "Otros"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Image", b =>
@@ -126,9 +161,8 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("GenderId")
+                        .HasColumnType("int");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -144,6 +178,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("UserId");
+
+                    b.HasIndex("GenderId")
+                        .IsUnique();
 
                     b.HasIndex("LocationId");
 
@@ -182,9 +219,17 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
+                    b.HasOne("Domain.Entities.Gender", "Gender")
+                        .WithOne("User")
+                        .HasForeignKey("Domain.Entities.User", "GenderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entities.Location", "Location")
                         .WithMany("Users")
                         .HasForeignKey("LocationId");
+
+                    b.Navigation("Gender");
 
                     b.Navigation("Location");
                 });
@@ -192,6 +237,12 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.City", b =>
                 {
                     b.Navigation("Location");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Gender", b =>
+                {
+                    b.Navigation("User")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Entities.Location", b =>

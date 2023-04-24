@@ -34,3 +34,15 @@ C:\Users\User\Desktop\PS(Grupal)\Microservicios\User\Template2\Domain\obj\Debug\
 C:\Users\User\Desktop\PS(Grupal)\Microservicios\User\Template2\Domain\obj\Debug\net6.0\refint\Domain.dll
 C:\Users\User\Desktop\PS(Grupal)\Microservicios\User\Template2\Domain\obj\Debug\net6.0\Domain.pdb
 C:\Users\User\Desktop\PS(Grupal)\Microservicios\User\Template2\Domain\obj\Debug\net6.0\ref\Domain.dll
+C:\Users\Marcos Sosa\source\repos\ExpressoDeLasDiez\UserMicroService2\Template2\Domain\bin\Debug\net6.0\Domain.deps.json
+C:\Users\Marcos Sosa\source\repos\ExpressoDeLasDiez\UserMicroService2\Template2\Domain\bin\Debug\net6.0\Domain.dll
+C:\Users\Marcos Sosa\source\repos\ExpressoDeLasDiez\UserMicroService2\Template2\Domain\bin\Debug\net6.0\Domain.pdb
+C:\Users\Marcos Sosa\source\repos\ExpressoDeLasDiez\UserMicroService2\Template2\Domain\obj\Debug\net6.0\Domain.csproj.AssemblyReference.cache
+C:\Users\Marcos Sosa\source\repos\ExpressoDeLasDiez\UserMicroService2\Template2\Domain\obj\Debug\net6.0\Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Marcos Sosa\source\repos\ExpressoDeLasDiez\UserMicroService2\Template2\Domain\obj\Debug\net6.0\Domain.AssemblyInfoInputs.cache
+C:\Users\Marcos Sosa\source\repos\ExpressoDeLasDiez\UserMicroService2\Template2\Domain\obj\Debug\net6.0\Domain.AssemblyInfo.cs
+C:\Users\Marcos Sosa\source\repos\ExpressoDeLasDiez\UserMicroService2\Template2\Domain\obj\Debug\net6.0\Domain.csproj.CoreCompileInputs.cache
+C:\Users\Marcos Sosa\source\repos\ExpressoDeLasDiez\UserMicroService2\Template2\Domain\obj\Debug\net6.0\Domain.dll
+C:\Users\Marcos Sosa\source\repos\ExpressoDeLasDiez\UserMicroService2\Template2\Domain\obj\Debug\net6.0\refint\Domain.dll
+C:\Users\Marcos Sosa\source\repos\ExpressoDeLasDiez\UserMicroService2\Template2\Domain\obj\Debug\net6.0\Domain.pdb
+C:\Users\Marcos Sosa\source\repos\ExpressoDeLasDiez\UserMicroService2\Template2\Domain\obj\Debug\net6.0\ref\Domain.dll

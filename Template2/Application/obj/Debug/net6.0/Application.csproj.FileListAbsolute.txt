@@ -43,3 +43,18 @@ C:\Users\User\Desktop\PS(Grupal)\Microservicios\User\Template2\Application\obj\D
 C:\Users\User\Desktop\PS(Grupal)\Microservicios\User\Template2\Application\obj\Debug\net6.0\refint\Application.dll
 C:\Users\User\Desktop\PS(Grupal)\Microservicios\User\Template2\Application\obj\Debug\net6.0\Application.pdb
 C:\Users\User\Desktop\PS(Grupal)\Microservicios\User\Template2\Application\obj\Debug\net6.0\ref\Application.dll
+C:\Users\Marcos Sosa\source\repos\ExpressoDeLasDiez\UserMicroService2\Template2\Application\bin\Debug\net6.0\Application.deps.json
+C:\Users\Marcos Sosa\source\repos\ExpressoDeLasDiez\UserMicroService2\Template2\Application\bin\Debug\net6.0\Application.dll
+C:\Users\Marcos Sosa\source\repos\ExpressoDeLasDiez\UserMicroService2\Template2\Application\bin\Debug\net6.0\Application.pdb
+C:\Users\Marcos Sosa\source\repos\ExpressoDeLasDiez\UserMicroService2\Template2\Application\bin\Debug\net6.0\Domain.dll
+C:\Users\Marcos Sosa\source\repos\ExpressoDeLasDiez\UserMicroService2\Template2\Application\bin\Debug\net6.0\Domain.pdb
+C:\Users\Marcos Sosa\source\repos\ExpressoDeLasDiez\UserMicroService2\Template2\Application\obj\Debug\net6.0\Application.csproj.AssemblyReference.cache
+C:\Users\Marcos Sosa\source\repos\ExpressoDeLasDiez\UserMicroService2\Template2\Application\obj\Debug\net6.0\Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Marcos Sosa\source\repos\ExpressoDeLasDiez\UserMicroService2\Template2\Application\obj\Debug\net6.0\Application.AssemblyInfoInputs.cache
+C:\Users\Marcos Sosa\source\repos\ExpressoDeLasDiez\UserMicroService2\Template2\Application\obj\Debug\net6.0\Application.AssemblyInfo.cs
+C:\Users\Marcos Sosa\source\repos\ExpressoDeLasDiez\UserMicroService2\Template2\Application\obj\Debug\net6.0\Application.csproj.CoreCompileInputs.cache
+C:\Users\Marcos Sosa\source\repos\ExpressoDeLasDiez\UserMicroService2\Template2\Application\obj\Debug\net6.0\Application.csproj.CopyComplete
+C:\Users\Marcos Sosa\source\repos\ExpressoDeLasDiez\UserMicroService2\Template2\Application\obj\Debug\net6.0\Application.dll
+C:\Users\Marcos Sosa\source\repos\ExpressoDeLasDiez\UserMicroService2\Template2\Application\obj\Debug\net6.0\refint\Application.dll
+C:\Users\Marcos Sosa\source\repos\ExpressoDeLasDiez\UserMicroService2\Template2\Application\obj\Debug\net6.0\Application.pdb
+C:\Users\Marcos Sosa\source\repos\ExpressoDeLasDiez\UserMicroService2\Template2\Application\obj\Debug\net6.0\ref\Application.dll

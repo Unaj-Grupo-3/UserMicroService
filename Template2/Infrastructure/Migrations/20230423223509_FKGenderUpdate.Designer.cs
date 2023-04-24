@@ -4,6 +4,7 @@ using Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ExpresoDbContext))]
-    partial class ExpresoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230423223509_FKGenderUpdate")]
+    partial class FKGenderUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,23 +58,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("GenderId");
 
                     b.ToTable("Gender");
-
-                    b.HasData(
-                        new
-                        {
-                            GenderId = 1,
-                            Description = "Masculino"
-                        },
-                        new
-                        {
-                            GenderId = 2,
-                            Description = "Femenino"
-                        },
-                        new
-                        {
-                            GenderId = 3,
-                            Description = "Otros"
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Image", b =>

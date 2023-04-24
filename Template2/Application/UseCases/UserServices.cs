@@ -24,7 +24,7 @@ namespace Application.UseCases
                 LastName = req.LastName,
                 Birthday = req.Birthday.Value,
                 Description = req.Description,
-                Gender = req.Gender,
+                GenderId = req.Gender,
                 AuthId = authId
             };
 
@@ -37,7 +37,7 @@ namespace Application.UseCases
                 LastName = create.LastName,
                 Birthday = create.Birthday,
                 Description = create.Description,
-                Gender = create.Gender
+                Gender = create.GenderId
             };
 
             return resp;
@@ -65,7 +65,7 @@ namespace Application.UseCases
                 LastName = updated.LastName,
                 Birthday = updated.Birthday,
                 Description = updated.Description,
-                Gender = updated.Gender,
+                Gender = updated.GenderId,
                 Images = images
             };
 
@@ -94,7 +94,7 @@ namespace Application.UseCases
                 Name = user.Name,
                 LastName = user.LastName,
                 Birthday = user.Birthday,
-                Gender = user.Gender,
+                Gender = user.GenderId,
                 Description = user.Description,
                 Images = images
             };

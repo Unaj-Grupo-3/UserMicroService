@@ -16,6 +16,7 @@ namespace Infrastructure.Persistance
         public DbSet<Image> Images { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Province> Provinces { get; set; }
+        public DbSet <Gender> Gender { get; set; }
 
         public ExpresoDbContext(DbContextOptions<ExpresoDbContext> options ) : base(options)
         {
@@ -37,6 +38,9 @@ namespace Infrastructure.Persistance
                 entity.HasOne<Location>(l => l.Location)
                         .WithMany(e => e.Users)
                         .HasForeignKey(e => e.LocationId);
+
+                entity.HasOne<Gender>(g => g.Gender)
+                        .WithOne(h => h.User).HasForeignKey<User>(x => x.GenderId);
 
             });
 
@@ -74,6 +78,32 @@ namespace Infrastructure.Persistance
                 entity.HasOne<User>(e => e.User)
                     .WithMany(e => e.Images)
                     .HasForeignKey(e => e.UserId);
+            });
+
+            modelBuilder.Entity<Gender>(entity =>
+            {
+                entity.HasKey(k => k.GenderId);
+                entity.Property(p => p.Description).HasMaxLength(255);
+                entity.HasOne<User>(u => u.User).WithOne(w => w.Gender);
+
+                entity.HasData(new Gender
+                {
+                    GenderId= 1,
+                    Description = "Masculino"
+                });
+
+                entity.HasData(new Gender
+                {
+                    GenderId = 2,
+                    Description = "Femenino"
+                });
+
+                entity.HasData(new Gender
+                {
+                    GenderId = 3,
+                    Description = "Otros"
+                });
+
             });
         }
     }

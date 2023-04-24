@@ -1,0 +1,57 @@
+﻿using Application.Interfaces;
+using Domain.Entities;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Presentacion.Controllers
+{
+    [Route("api/v1/[controller]")]
+    [ApiController]
+    public class GenderController : ControllerBase
+    {
+
+        private readonly IGenderService _genderService;
+
+        public GenderController(IGenderService genderService)
+        {
+            _genderService = genderService;
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetDescGenderById(int id)
+        {
+            try
+            {
+                var response = await _genderService.GetDescGenderById(id);
+                if(response == null)
+                {
+                    return NotFound();
+                }
+                
+                return new JsonResult(response);
+            }
+            catch (Microsoft.Data.SqlClient.SqlException)
+            {
+                return new JsonResult(new { Message = "Se ha producido un error interno en el servidor." }) { StatusCode = 500 };
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetGenders()
+        {
+            try
+            {
+                var response = await _genderService.GetGenders();
+                if (response == null)
+                {
+                    return NotFound();
+                }
+
+                return new JsonResult(response);
+            }
+            catch (Microsoft.Data.SqlClient.SqlException)
+            {
+                return new JsonResult(new { Message = "Se ha producido un error interno en el servidor." }) { StatusCode = 500 };
+            }
+        }
+    }
+}
