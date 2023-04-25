@@ -129,7 +129,7 @@ namespace Application.UseCases
                     Name = user.Name,
                     LastName = user.LastName,
                     Birthday = user.Birthday,
-                    Gender = user.Gender,
+                    Gender = user.GenderId,
                     Description = user.Description,
                     Images = images
                 };
