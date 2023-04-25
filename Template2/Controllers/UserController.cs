@@ -24,6 +24,7 @@ namespace Presentacion.Controllers
             _authApiServices = authApiServices;
         }
 
+        // Quizas se necesite autenticacion?
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById(int id)
         {
@@ -104,6 +105,8 @@ namespace Presentacion.Controllers
 
         }
 
+
+        // Agregar autenticacion
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id,UserReq req)
         {
@@ -168,6 +171,7 @@ namespace Presentacion.Controllers
                 return new JsonResult(new { Message = "Se ha producido un error interno en el servidor." }) { StatusCode = 500 };
             }
         }
+
         [HttpGet("api/users/{name?}")]
         public async Task<IActionResult> GetAll(string? name=null)
         {
@@ -184,6 +188,27 @@ namespace Presentacion.Controllers
                 
             }
             catch (Exception)
+            {
+                return new JsonResult(new { Message = "Se ha producido un error interno en el servidor." }) { StatusCode = 500 };
+            }
+        }
+
+        // Usado en el micro de auth para generar el token
+        [HttpGet("Auth/{authId}")]
+        public async Task<IActionResult> GetUserByAuthId(Guid authId)
+        {
+            try
+            {
+                UserResponse response = await _userServices.GetUserByAuthId(authId);
+
+                if (response == null)
+                {
+                    return NotFound();
+                }
+
+                return new JsonResult(new { Message = "Encontrado.", Response = response });
+            }
+            catch (Microsoft.Data.SqlClient.SqlException)
             {
                 return new JsonResult(new { Message = "Se ha producido un error interno en el servidor." }) { StatusCode = 500 };
             }

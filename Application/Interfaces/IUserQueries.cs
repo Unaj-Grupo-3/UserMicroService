@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.Models;
+using Domain.Entities;
 
 namespace Application.Interfaces
 {
@@ -6,5 +7,6 @@ namespace Application.Interfaces
     {
         Task<User> GetUserById(int userId);
         Task<List<User>> GetByFirstName(string? userFirstName);
+        Task<User> GetUserByAuthId(Guid authId);
     }
 }
