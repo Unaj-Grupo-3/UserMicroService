@@ -137,5 +137,35 @@ namespace Application.UseCases
             }
             return userResponse;
         }
+
+        public async Task<UserResponse> GetUserByAuthId(Guid authId)
+        {
+            User user = await _queries.GetUserByAuthId(authId);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            List<string> images = new List<string>();
+
+            foreach (var image in user.Images)
+            {
+                images.Add(image.Url);
+            }
+
+            UserResponse response = new UserResponse
+            {
+                UserId = user.UserId,
+                Name = user.Name,
+                LastName = user.LastName,
+                Birthday = user.Birthday,
+                Gender = user.GenderId,
+                Description = user.Description,
+                Images = images
+            };
+
+            return response;
+        }
     }
 }

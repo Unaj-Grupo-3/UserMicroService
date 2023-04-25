@@ -9,6 +9,9 @@ namespace Application.Interfaces
         Task<UserResponse> UpdateUser(int userId,UserReq req); 
 
         Task<UserResponse> GetUserById(int userId);
-        Task <List<UserResponse>> GetByFirstName(string? userFirstName);
+
+        Task<List<UserResponse>> GetByFirstName(string? userFirstName);
+
+        Task<UserResponse> GetUserByAuthId(Guid authId); 
     }
 }

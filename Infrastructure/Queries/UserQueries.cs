@@ -34,11 +34,20 @@ namespace Infrastructure.Queries
             }
         }
 
+        public async Task<User> GetUserByAuthId(Guid authId)
+        {
+            User user = await _context.Users.Include(x => x.Images.OrderBy(x => x.Order)).FirstOrDefaultAsync(x => x.AuthId == authId);
+
+            return user;
+        }
+
         public async Task<User> GetUserById(int userId)
         {
             User user = await _context.Users.Include(x => x.Images.OrderBy(x => x.Order)).FirstOrDefaultAsync(x => x.UserId == userId);
 
             return user;
         }
+
+
     }
 }
