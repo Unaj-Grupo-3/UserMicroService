@@ -1,6 +1,7 @@
-﻿
-using Application.Interfaces;
-using System.Text.RegularExpressions;
+﻿using Application.Interfaces;
+using Domain.Entities;
+using Microsoft.AspNetCore.Http;
+
 
 namespace Application.UseCases
 {
@@ -8,49 +9,63 @@ namespace Application.UseCases
     {
         public Dictionary<string, string> errors { get; set; }
 
-        public ValidateImageServices()
+        private readonly IImageQueries _imageQueries;
+
+        public ValidateImageServices(IImageQueries imageQueries)
         {
             errors = new Dictionary<string, string>();
+            _imageQueries = imageQueries;
         }
 
-        public async Task<bool> ValidateUrl(string url)
+        public async Task<bool> Validate(IFormFile photo, int userId)
         {
-            try
+                if ((await _imageQueries.GetImageByUserId(userId)).Count >= 6)
+                {
+                    errors.Add("imagen", "No se pueden agregar mas fotos");
+                    return false;
+                }
+
+               List<string> extensions =new List<string>() { ".jpg", ".jpeg", ".png", ".gif", ".avif", ".webp" };
+
+                string extensionFromPhoto = Path.GetExtension(photo.FileName).ToLowerInvariant();
+
+                if (!extensions.Contains(extensionFromPhoto))
+                {
+                    errors.Add("imagen", "El archivo no esta en el formato correcto");
+                    return false;
+                }
+
+                if (photo.Length > 5 * 1024 * 1024) // 5 MB
+                {
+                    errors.Add("imagen", "La imagen no puede pesar más de 5 MB");
+                    return false;
+                }
+
+                return true;    
+
+        }
+
+        public async Task<bool> ValidateImages(IList<int> images, int userId)
+        {
+            foreach (int imageId in images)
             {
-                // Validar URL de la imagen
-                var client = new HttpClient();
-                var response = await client.GetAsync(url);
+                Image imageByid = await _imageQueries.GetImageById(imageId);
 
-                if (!response.IsSuccessStatusCode)
+                if (imageByid == null || imageByid.UserId != userId) 
                 {
-                    errors.Add("imagen", "La URL de la imagen ingresada no es valida");
+                    errors.Add("imagen", "Error con las fotos ingresadas");
                     return false;
                 }
 
-                string contentType = response.Content.Headers.ContentType.MediaType;
-                if (!contentType.StartsWith("image/"))
-                {
-                    errors.Add("imagen", "La URL no devuelve una imagen");
-                    return false;
-                }
-
-                var extension = contentType.Split('/')[1];
-
-                var regex = new Regex(@"^\.?(jpg|jpeg|png|gif)$", RegexOptions.IgnoreCase);
-                if (!regex.IsMatch(extension))
-                {
-                    errors.Add("imagen", "La URL no devuelve una imagen con el formato valido");
-                    return false;
-                }
-
-                return true;
             }
-            catch (Exception ex)
+
+            if (images.Count > 6)
             {
-                errors.Add("imagen", "Ha ocurrido un error con la URL");
+                errors.Add("imagen", "No se pueden agregar mas fotos");
                 return false;
             }
 
+            return true;
         }
 
         public Dictionary<string, string> GetErrors()

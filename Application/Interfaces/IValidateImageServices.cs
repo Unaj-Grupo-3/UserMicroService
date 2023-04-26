@@ -1,9 +1,13 @@
 ﻿
+using Microsoft.AspNetCore.Http;
+
 namespace Application.Interfaces
 {
     public interface IValidateImageServices
     {
-        public Task<bool> ValidateUrl(string url);
+        Task<bool> Validate(IFormFile photo, int userId);
+
+        Task<bool> ValidateImages(IList<int> images, int userId);
 
         Dictionary<string, string> GetErrors();
     }

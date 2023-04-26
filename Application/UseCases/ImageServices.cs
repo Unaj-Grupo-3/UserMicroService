@@ -16,96 +16,46 @@ namespace Application.UseCases
             _queries = queries;
         }
 
-        public async Task<IList<string>> AddImages(int userId, IList<string> images)
+        public async Task<IList<string>> UpdateImages(int userId, IList<int> images)
         {
-            List<string> response = new List<string>();
+            IList<Image> imagesByUserId = await _queries.GetImageByUserId(userId);
+            IList<Image> imagesToUpdate = new List<Image>();
+            IList<Image> imagesToDelete = new List<Image>();
+            images = images.Distinct().ToList();
 
-            for (int i = 0; i < images.Count; i++)
+            // Podria buscar del primer array
+            foreach(int imageUpdatedId in images)
+            {
+                var imageToUpdate = imagesByUserId.FirstOrDefault(x => x.ImageId == imageUpdatedId);
+
+                imagesToUpdate.Add(imageToUpdate);
+            }
+
+            foreach (var imageToDelete in imagesByUserId)
+            {
+                if (!images.Contains(imageToDelete.ImageId))
+                {
+                    imagesToDelete.Add(imageToDelete);
+                }
+            }
+
+            // Primero actualizo
+            for (int i = 0; i < imagesToUpdate.Count; i++)
             {
                 Image image = new Image
                 {
-                   UserId = userId,
-                   Url = images[i],
-                   Order = i
+                    ImageId = imagesToUpdate[i].ImageId,
+                    Order = i,
+                    Url = imagesToUpdate[i].Url
                 };
 
-               await _commands.InsertImage(image);
-
-                response.Add(images[i]);
+                await _commands.UpdateImage(image);
             }
 
-            return response;
-        }
-
-        public async Task<IList<string>> UpdateImages(int userId, IList<string> images)
-        {
-            IList<Image> imagesByUserId = await _queries.GetImageByUserId(userId);
-
-            // No hay que crear ni eliminar solo actualizar los links
-            if (imagesByUserId.Count == images.Count)
-            {
-                for(int i = 0;i < imagesByUserId.Count; i++)
-                {
-                    Image image = new Image
-                    {
-                        ImageId = imagesByUserId[i].ImageId,
-                        Order = imagesByUserId[i].Order,
-                        Url = images[i]
-                    };
-
-                    await _commands.UpdateImage(image);
-                }
-            }
-
-            // Habria que eliminar las fotos que sobran
-            else if(imagesByUserId.Count > images.Count)
-            {
-                // Actualizo las anteriores
-                for (int i = 0; i < images.Count; i++)
-                {
-                    Image image = new Image
-                    {
-                        ImageId = imagesByUserId[i].ImageId,
-                        Order = imagesByUserId[i].Order,
-                        Url = images[i]
-                    };
-
-                    await _commands.UpdateImage(image);
-                }
-
-                //Elimino las que sobran
-                for (int i = images.Count; i < imagesByUserId.Count; i++)
-                {
-                    await _commands.DeleteImage(imagesByUserId[i]);
-                }
-            }
-
-            // Habria que crear las fotos que faltan
-            else
-            {
-                for (int i = 0; i < imagesByUserId.Count; i++)
-                {
-                    Image image = new Image
-                    {
-                        ImageId = imagesByUserId[i].ImageId,
-                        Order = imagesByUserId[i].Order,
-                        Url = images[i]
-                    };
-
-                    await _commands.UpdateImage(image);
-                }
-
-                for (int i = imagesByUserId.Count; i<images.Count; i++)
-                {
-                    Image image = new Image
-                    {
-                        UserId = userId,
-                        Order = i,
-                        Url = images[i] 
-                    };
-
-                    await _commands.InsertImage(image);
-                }
+            // Luego elimino
+            for (int i = 0; i < imagesToDelete.Count; i++)
+            { 
+                await _commands.DeleteImage(imagesToDelete[i]);
             }
 
             imagesByUserId = await _queries.GetImageByUserId(userId);
@@ -118,6 +68,22 @@ namespace Application.UseCases
             }
 
             return response;
+        }
+
+        public async Task<string> UploadImage(int userId, string url)
+        {
+            IList<Image> imagesByUserId = await _queries.GetImageByUserId(userId);
+
+            Image image = new Image
+            {
+                UserId = userId,
+                Url = url,
+                Order = imagesByUserId.Count
+            };
+
+            await _commands.InsertImage(image);
+
+            return url;
         }
     }
 }

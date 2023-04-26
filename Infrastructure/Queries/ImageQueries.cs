@@ -16,6 +16,13 @@ namespace Infrastructure.Queries
             _context = context;
         }
 
+        public async Task<Image> GetImageById(int id)
+        {
+            Image image = await _context.Images.FirstOrDefaultAsync(x => x.ImageId == id);
+
+            return image;
+        }
+
         public async Task<IList<Image>> GetImageByUserId(int userId)
         {
             IList<Image> images = await _context.Images.Where(x => x.UserId == userId).OrderBy(x => x.Order).ToListAsync();

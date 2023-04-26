@@ -31,7 +31,7 @@ namespace Infrastructure.Commands
             updated.Name = user.Name != null ? user.Name : updated.Name;
             updated.LastName = user.LastName != null ? user.LastName : updated.LastName;
             updated.Birthday = user.Birthday != null ? user.Birthday.Value : updated.Birthday;
-            updated.GenderId = user.Gender != null ? user.Gender : updated.GenderId;
+            updated.GenderId = user.Gender != null ? user.Gender.Value : updated.GenderId;
             updated.Description = user.Description != null ? user.Description : updated.Description;
 
             await _context.SaveChangesAsync();

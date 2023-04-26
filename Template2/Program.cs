@@ -51,7 +51,7 @@ builder.Services.AddTransient<IUserCommands, UserCommands>();
 builder.Services.AddTransient<IUserServices, UserServices>();
 builder.Services.AddTransient<IUserQueries, UserQueries>();
 
-builder.Services.AddTransient<IGenderService, GenderService>();
+builder.Services.AddTransient<IGenderServices, GenderServices>();
 builder.Services.AddTransient<IGenderQueries, GenderQueries>();
 
 builder.Services.AddTransient<IEncryptServices, EncryptServices>();
@@ -60,6 +60,7 @@ builder.Services.AddTransient<IImageCommands, ImageCommands>();
 builder.Services.AddTransient<IImageQueries, ImageQueries>();
 builder.Services.AddTransient<IImageServices, ImageServices>();
 builder.Services.AddTransient<IValidateImageServices, ValidateImageServices>();
+builder.Services.AddTransient<IServerImagesApiServices, ServerImagesApiServices>();
 builder.Services.AddTransient<IAuthApiServices, AuthApiServices>();
 
 

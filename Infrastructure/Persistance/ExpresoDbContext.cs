@@ -39,8 +39,9 @@ namespace Infrastructure.Persistance
                         .WithMany(e => e.Users)
                         .HasForeignKey(e => e.LocationId);
 
-                entity.HasOne<Gender>(g => g.Gender)
-                        .WithOne(h => h.User).HasForeignKey<User>(x => x.GenderId);
+                entity.HasOne<Gender>(e => e.Gender)
+                    .WithMany(e => e.Users)
+                    .HasForeignKey(e => e.GenderId);
 
             });
 
@@ -75,6 +76,8 @@ namespace Infrastructure.Persistance
             {
                 entity.HasKey(e => e.ImageId);
                 entity.Property(e => e.ImageId).ValueGeneratedOnAdd();
+
+
                 entity.HasOne<User>(e => e.User)
                     .WithMany(e => e.Images)
                     .HasForeignKey(e => e.UserId);
@@ -84,7 +87,6 @@ namespace Infrastructure.Persistance
             {
                 entity.HasKey(k => k.GenderId);
                 entity.Property(p => p.Description).HasMaxLength(255);
-                entity.HasOne<User>(u => u.User).WithOne(w => w.Gender);
 
                 entity.HasData(new Gender
                 {
