@@ -30,6 +30,8 @@ namespace Infrastructure.Commands
 
             updated.Url = image.Url;
 
+            updated.Order = image.Order;
+
             await _context.SaveChangesAsync();
         }
 

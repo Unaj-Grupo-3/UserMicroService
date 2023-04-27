@@ -2,7 +2,7 @@
 
 namespace Application.Interfaces
 {
-    public interface IGenderService
+    public interface IGenderServices
     {
         Task<List<GenderResponse>> GetGenders();
         Task<GenderResponse> GetDescGenderById(int GenderId);

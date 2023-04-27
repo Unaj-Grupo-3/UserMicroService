@@ -9,9 +9,9 @@ namespace Presentacion.Controllers
     public class GenderController : ControllerBase
     {
 
-        private readonly IGenderService _genderService;
+        private readonly IGenderServices _genderService;
 
-        public GenderController(IGenderService genderService)
+        public GenderController(IGenderServices genderService)
         {
             _genderService = genderService;
         }
