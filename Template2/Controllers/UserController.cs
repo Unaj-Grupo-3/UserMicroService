@@ -1,8 +1,9 @@
-﻿using Abp.PlugIns;
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using Application.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using System.Security.Claims;
 
 namespace Presentacion.Controllers
 {
@@ -36,12 +37,16 @@ namespace Presentacion.Controllers
         }
 
         // Quizas se necesite autenticacion?
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetUserById(int id)
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetUserById()
         {
             try
             {
-                UserResponse response = await _userServices.GetUserById(id);
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                int userId = int.Parse(identity.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
+
+                UserResponse response = await _userServices.GetUserById(userId);
 
                 if (response == null)
                 {
@@ -107,16 +112,20 @@ namespace Presentacion.Controllers
         }
 
         // Agregar autenticacion con JWT
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id,UserReq req)
+        [HttpPut]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> UpdateUser(UserReq req)
         {
             try
             {
-                var userExist = await _userServices.GetUserById(id);
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                int userId = int.Parse(identity.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
+
+                var userExist = await _userServices.GetUserById(userId);
 
                 if (userExist == null)
                 {
-                    return new JsonResult(new {Message = $"No existe el usuario con el id {id}"}) { StatusCode = 404 };   
+                    return new JsonResult(new {Message = $"No existe el usuario con el id {userId}"}) { StatusCode = 404 };   
                 }
 
                 if (req.Gender != null)
@@ -139,15 +148,15 @@ namespace Presentacion.Controllers
 
                     if (req.Images != null && req.Images.Count != 0)
                     {
-                        if(!await _validateImageServices.ValidateImages(req.Images, id))
+                        if(!await _validateImageServices.ValidateImages(req.Images, userId))
                         {
                             return new JsonResult(new { Message = "Error en la carga de fotos", Response = _validateImageServices.GetErrors() }) { StatusCode = 200 };
                         }
 
-                        imagesUpdate = await _imageServices.UpdateImages(id, req.Images);
+                        imagesUpdate = await _imageServices.UpdateImages(userId, req.Images);
                     }
 
-                    var response = await _userServices.UpdateUser(id, req);
+                    var response = await _userServices.UpdateUser(userId, req);
 
                     if (imagesUpdate.Count > 0)
                     {
@@ -211,6 +220,7 @@ namespace Presentacion.Controllers
 
         // Agregar autenticacion con JWT. Devolver User en la response.
         [HttpPost("{id}/Photo")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> AddImage(int id,IFormFile file)
         {
             try
