@@ -24,7 +24,7 @@ namespace Application.UseCases
                 LastName = req.LastName,
                 Birthday = req.Birthday.Value,
                 Description = req.Description,
-                GenderId = req.Gender,
+                GenderId = req.Gender.Value,
                 AuthId = authId
             };
 

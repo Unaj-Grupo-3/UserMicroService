@@ -4,11 +4,11 @@ using Domain.Entities;
 
 namespace Application.UseCases
 {
-    public class GenderService : IGenderService
+    public class GenderServices : IGenderServices
     {
         private readonly IGenderQueries _queries;
 
-        public GenderService(IGenderQueries queries)
+        public GenderServices(IGenderQueries queries)
         {
             _queries = queries;
         }

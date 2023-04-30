@@ -10,5 +10,6 @@ namespace Application.Interfaces
         Task UpdateImage(Image image);
 
         Task DeleteImage(Image image);
+
     }
 }
