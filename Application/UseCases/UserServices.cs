@@ -43,20 +43,9 @@ namespace Application.UseCases
             return resp;
         }
 
-        public async Task<UserResponse> UpdateUser(int userId, UserReq req)
+        public async Task<UserResponse> UpdateUser(int userId, UserUpdReq req)
         {
             var updated = await _commands.UpdateUser(userId, req);
-
-
-            IList<string> images = new List<string>();
-
-            if(updated.Images.Count != 0) 
-            {
-                foreach (var image in updated.Images)
-                {
-                    images.Add(image.Url);
-                }
-            }
 
             UserResponse response = new UserResponse
             {
@@ -65,8 +54,7 @@ namespace Application.UseCases
                 LastName = updated.LastName,
                 Birthday = updated.Birthday,
                 Description = updated.Description,
-                Gender = updated.GenderId,
-                Images = images
+                Gender = updated.GenderId
             };
 
             return response;    

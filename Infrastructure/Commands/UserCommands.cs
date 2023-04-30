@@ -24,7 +24,7 @@ namespace Infrastructure.Commands
             return user;
         }
 
-        public async Task<User> UpdateUser(int userId, UserReq user)
+        public async Task<User> UpdateUser(int userId, UserUpdReq user)
         {
             User updated = await _context.Users.FirstOrDefaultAsync(x => x.UserId == userId);
 
