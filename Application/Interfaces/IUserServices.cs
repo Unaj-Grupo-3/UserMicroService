@@ -6,7 +6,7 @@ namespace Application.Interfaces
     {
         Task<UserResponse> AddUser(UserReq req, Guid authId);
 
-        Task<UserResponse> UpdateUser(int userId,UserReq req); 
+        Task<UserResponse> UpdateUser(int userId, UserUpdReq req);
 
         Task<UserResponse> GetUserById(int userId);
 

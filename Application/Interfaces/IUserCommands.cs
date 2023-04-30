@@ -7,6 +7,6 @@ namespace Application.Interfaces
     {
         Task<User> InsertUser(User user);
 
-        Task<User> UpdateUser(int userId, UserReq user);
+        Task<User> UpdateUser(int userId, UserUpdReq user);
     }
 }

@@ -58,6 +58,50 @@ namespace Application.UseCases
             }
         }
 
+        public async Task<IDictionary<bool, IDictionary<string, string>>> Validate(UserUpdReq userUpdReq, bool allowNull)
+        {
+            bool nombre = true;
+
+            if (!allowNull || userUpdReq.Name != null)
+            {
+                nombre = await ValidateLenght(userUpdReq.Name, "Nombre", 50) && await ValidateCharacters(userUpdReq.Name, "Nombre");
+            }
+
+            bool birthday = true;
+
+            if (!allowNull || userUpdReq.Birthday != null)
+            {
+                birthday = await ValidateAge(userUpdReq.Birthday, "Fecha de Nacimiento");
+            }
+
+            bool apellido = true;
+
+            if (!allowNull || userUpdReq.LastName != null)
+            {
+                apellido = await ValidateLenght(userUpdReq.LastName, "Apellido", 50) && await ValidateCharacters(userUpdReq.LastName, "Apellido");
+            }
+
+            bool descripcion = true;
+
+            if (!allowNull || userUpdReq.Description != null)
+            {
+                descripcion = await ValidateLenght(userUpdReq.Description, "Descripcion", 255);
+            }
+
+            IDictionary<bool, IDictionary<string, string>> newDictionary = new Dictionary<bool, IDictionary<string, string>>() { };
+
+            if (nombre && apellido && descripcion && birthday)
+            {
+                newDictionary.Add(true, errors);
+                return newDictionary;
+            }
+            else
+            {
+                newDictionary.Add(false, errors);
+                return newDictionary;
+            }
+        }
+
         public async Task<bool> ValidateLenght(string verify, string tag, int maxLenght)
         {
             string errorMessage = "";
