@@ -37,7 +37,8 @@ namespace Application.UseCases
                 LastName = create.LastName,
                 Birthday = create.Birthday,
                 Description = create.Description,
-                Gender = create.GenderId
+                Gender = create.GenderId,
+                Images = new List<ImageResponse>()
             };
 
             return resp;
@@ -47,6 +48,19 @@ namespace Application.UseCases
         {
             var updated = await _commands.UpdateUser(userId, req);
 
+            List<ImageResponse> imagesResponse = new List<ImageResponse>();
+
+            foreach (var image in updated.Images)
+            {
+                ImageResponse imageResponse = new ImageResponse()
+                {
+                    Id = image.ImageId,
+                    Url = image.Url,
+                };
+
+                imagesResponse.Add(imageResponse);
+            }
+
             UserResponse response = new UserResponse
             {
                 UserId = updated.UserId,
@@ -54,7 +68,8 @@ namespace Application.UseCases
                 LastName = updated.LastName,
                 Birthday = updated.Birthday,
                 Description = updated.Description,
-                Gender = updated.GenderId
+                Gender = updated.GenderId,
+                Images = imagesResponse
             };
 
             return response;    
@@ -69,11 +84,17 @@ namespace Application.UseCases
                 return null;
             }
 
-            List<string> images = new List<string>();
+            List<ImageResponse> imagesResponse = new List<ImageResponse>();
 
             foreach(var image in user.Images)
             {
-                images.Add(image.Url);
+                ImageResponse imageResponse = new ImageResponse()
+                {
+                    Id = image.ImageId,
+                    Url = image.Url,
+                };
+
+                imagesResponse.Add(imageResponse);
             }
 
             UserResponse response = new UserResponse
@@ -84,7 +105,7 @@ namespace Application.UseCases
                 Birthday = user.Birthday,
                 Gender = user.GenderId,
                 Description = user.Description,
-                Images = images
+                Images = imagesResponse
             };
 
             return response;
@@ -102,15 +123,19 @@ namespace Application.UseCases
             }
             foreach (var user in users)
             {
-                List<string> images = new List<string>();
+                List<ImageResponse> imagesResponse = new List<ImageResponse>();
 
-                if (user.Images != null)
+                foreach (var image in user.Images)
                 {
-                    foreach (var image in user.Images)
+                    ImageResponse imageResponse = new ImageResponse()
                     {
-                        images.Add(image.Url);
-                    }
+                        Id = image.ImageId,
+                        Url = image.Url,
+                    };
+
+                    imagesResponse.Add(imageResponse);
                 }
+
                 UserResponse response = new UserResponse
                 {
                     UserId = user.UserId,
@@ -119,8 +144,9 @@ namespace Application.UseCases
                     Birthday = user.Birthday,
                     Gender = user.GenderId,
                     Description = user.Description,
-                    Images = images
+                    Images = imagesResponse
                 };
+
                 userResponse.Add(response);
             }
             return userResponse;
@@ -135,11 +161,17 @@ namespace Application.UseCases
                 return null;
             }
 
-            List<string> images = new List<string>();
+            List<ImageResponse> imagesResponse = new List<ImageResponse>();
 
             foreach (var image in user.Images)
             {
-                images.Add(image.Url);
+                ImageResponse imageResponse = new ImageResponse()
+                {
+                    Id = image.ImageId,
+                    Url = image.Url,
+                };
+
+                imagesResponse.Add(imageResponse);
             }
 
             UserResponse response = new UserResponse
@@ -150,7 +182,7 @@ namespace Application.UseCases
                 Birthday = user.Birthday,
                 Gender = user.GenderId,
                 Description = user.Description,
-                Images = images
+                Images = imagesResponse
             };
 
             return response;
@@ -168,15 +200,19 @@ namespace Application.UseCases
             }
             foreach (var user in users)
             {
-                List<string> images = new List<string>();
+                List<ImageResponse> imagesResponse = new List<ImageResponse>();
 
-                if (user.Images.Count != 0)
+                foreach (var image in user.Images)
                 {
-                    foreach (var image in user.Images)
+                    ImageResponse imageResponse = new ImageResponse()
                     {
-                        images.Add(image.Url);
-                    }
+                        Id = image.ImageId,
+                        Url = image.Url,
+                    };
+
+                    imagesResponse.Add(imageResponse);
                 }
+
                 UserResponse response = new UserResponse
                 {
                     UserId = user.UserId,
@@ -185,7 +221,7 @@ namespace Application.UseCases
                     Birthday = user.Birthday,
                     Gender = user.GenderId,
                     Description = user.Description,
-                    Images = images
+                    Images = imagesResponse
                 };
                 userResponse.Add(response);
             }
@@ -201,15 +237,19 @@ namespace Application.UseCases
             {
                 foreach (var user in listUser)
                 {
-                    List<string> images = new List<string>();
+                    List<ImageResponse> imagesResponse = new List<ImageResponse>();
 
-                    if (user.Images.Count != 0)
+                    foreach (var image in user.Images)
                     {
-                        foreach (var image in user.Images)
+                        ImageResponse imageResponse = new ImageResponse()
                         {
-                            images.Add(image.Url);
-                        }
+                            Id = image.ImageId,
+                            Url = image.Url,
+                        };
+
+                        imagesResponse.Add(imageResponse);
                     }
+
                     UserResponse response = new UserResponse
                     {
                         UserId = user.UserId,
@@ -218,8 +258,9 @@ namespace Application.UseCases
                         Birthday = user.Birthday,
                         Gender = user.GenderId,
                         Description = user.Description,
-                        Images = images
+                        Images = imagesResponse
                     };
+
                     listUserResponse.Add(response);
                 }
                 return listUserResponse;

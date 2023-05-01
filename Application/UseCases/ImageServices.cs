@@ -1,5 +1,6 @@
 ﻿
 using Application.Interfaces;
+using Application.Models;
 using Domain.Entities;
 
 namespace Application.UseCases
@@ -16,7 +17,7 @@ namespace Application.UseCases
             _queries = queries;
         }
 
-        public async Task<IList<string>> UpdateImages(int userId, IList<int> images)
+        public async Task<IList<ImageResponse>> UpdateImages(int userId, IList<int> images)
         {
             IList<Image> imagesByUserId = await _queries.GetImageByUserId(userId);
             IList<Image> imagesToUpdate = new List<Image>();
@@ -60,17 +61,23 @@ namespace Application.UseCases
 
             imagesByUserId = await _queries.GetImageByUserId(userId);
 
-            IList<string> response  = new List<string>();
+            IList<ImageResponse> response  = new List<ImageResponse>();
 
             foreach (Image image in imagesByUserId)
             {
-                response.Add(image.Url);
+                ImageResponse imageResponse = new ImageResponse
+                {
+                    Id = image.ImageId,
+                    Url = image.Url,
+                };
+
+                response.Add(imageResponse);
             }
 
             return response;
         }
 
-        public async Task<string> UploadImage(int userId, string url)
+        public async Task<ImageResponse> UploadImage(int userId, string url)
         {
             IList<Image> imagesByUserId = await _queries.GetImageByUserId(userId);
 
@@ -81,9 +88,15 @@ namespace Application.UseCases
                 Order = imagesByUserId.Count
             };
 
-            await _commands.InsertImage(image);
+            Image create = await _commands.InsertImage(image);
 
-            return url;
+            ImageResponse response = new ImageResponse()
+            {
+                Id = image.ImageId,
+                Url = image.Url,
+            };
+
+            return response;
         }
     }
 }

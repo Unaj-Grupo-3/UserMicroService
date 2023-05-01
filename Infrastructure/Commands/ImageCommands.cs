@@ -17,11 +17,13 @@ namespace Infrastructure.Commands
             _context = context;
         }
 
-        public async Task InsertImage(Image image)
+        public async Task<Image> InsertImage(Image image)
         {
            await _context.AddAsync(image);
 
            await _context.SaveChangesAsync();
+
+            return image;
         }
 
         public async Task UpdateImage(Image image)
