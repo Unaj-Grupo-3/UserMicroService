@@ -16,9 +16,10 @@ namespace Infrastructure.Queries
 
         public async Task<List<User>> GetAllUserByIds(List<int> userIds)
         {
-            List<User> mercaderias = await _context.Users.Where(u => userIds.Contains(u.UserId)).ToListAsync();
+            List<User> users = await _context.Users.Include(u => u.Images.OrderBy(x => x.Order))
+                                                         .Where(u => userIds.Contains(u.UserId)).ToListAsync();
 
-            return mercaderias;
+            return users;
         }
 
         public async Task<List<User>> GetByFirstName(string? userFirstName)

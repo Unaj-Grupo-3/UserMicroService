@@ -201,6 +201,15 @@ namespace Application.UseCases
             {
                 foreach (var user in listUser)
                 {
+                    List<string> images = new List<string>();
+
+                    if (user.Images.Count != 0)
+                    {
+                        foreach (var image in user.Images)
+                        {
+                            images.Add(image.Url);
+                        }
+                    }
                     UserResponse response = new UserResponse
                     {
                         UserId = user.UserId,
@@ -209,7 +218,7 @@ namespace Application.UseCases
                         Birthday = user.Birthday,
                         Gender = user.GenderId,
                         Description = user.Description,
-                        //Images = images
+                        Images = images
                     };
                     listUserResponse.Add(response);
                 }
