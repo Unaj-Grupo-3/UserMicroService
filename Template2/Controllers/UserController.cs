@@ -1,4 +1,5 @@
-﻿using Application.Interfaces;
+﻿using Abp.Webhooks;
+using Application.Interfaces;
 using Application.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -37,7 +38,7 @@ namespace Presentacion.Controllers
         }
 
         // Quizas se necesite autenticacion?
-        [HttpGet]
+        [HttpGet("me")]
         [Authorize]
         public async Task<IActionResult> GetUserById()
         {
@@ -137,13 +138,22 @@ namespace Presentacion.Controllers
                     }
                 }
 
-                var diccio = _validateServices.Validate(req, true).Result;
+                UserReq userReq = new UserReq()
+                {
+                    Name = req.Name,
+                    LastName = req.LastName,
+                    Birthday = req.Birthday,
+                    Gender = req.Gender,
+                    Description = req.Description
+                };
+
+                var diccio = _validateServices.Validate(userReq, true).Result;
 
                 var algo = diccio.ElementAt(0).Key;
 
                 if (diccio.ElementAt(0).Key)
                 {
-                    IList<string> imagesUpdate = new List<string>();
+                    IList<ImageResponse> imagesUpdate = new List<ImageResponse>();
 
                     if (req.Images != null && req.Images.Count != 0)
                     {
@@ -176,28 +186,30 @@ namespace Presentacion.Controllers
             }
         }
 
-        [HttpGet("api/users/{name?}")]
-        public async Task<IActionResult> GetAll(string? name=null)
-        {
-            try
-            {
-                var users = await _userServices.GetByFirstName(name);
+        //[HttpGet("api/users/{name?}")]
+        //public async Task<IActionResult> GetAll(string? name=null)
+        //{
+        //    try
+        //    {
+        //        var users = await _userServices.GetByFirstName(name);
 
-                if (users == null)
-                {
-                    return NotFound();
-                }
+        //        if (users == null)
+        //        {
+        //            return NotFound();
+        //        }
 
-                return new JsonResult(users);
+        //        return new JsonResult(users);
                 
-            }
-            catch (Exception)
-            {
-                return new JsonResult(new { Message = "Se ha producido un error interno en el servidor." }) { StatusCode = 500 };
-            }
-        }
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return new JsonResult(new { Message = "Se ha producido un error interno en el servidor." }) { StatusCode = 500 };
+        //    }
+        //}
 
         // Usado en el micro de auth para generar el token. Si CreateUser se use en el MICRO-AUTH no hace falta tenerlo.
+
+
         [HttpGet("Auth/{authId}")]
         public async Task<IActionResult> GetUserByAuthId(Guid authId)
         {
@@ -218,26 +230,29 @@ namespace Presentacion.Controllers
             }
         }
 
-        // Agregar autenticacion con JWT. Devolver User en la response.
-        [HttpPost("{id}/Photo")]
+        [HttpPost("Photo")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> AddImage(int id,IFormFile file)
+        public async Task<IActionResult> AddImage(IFormFile file)
         {
             try
             {
-                var userExist = await _userServices.GetUserById(id);
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+
+                int userId = int.Parse(identity.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
+
+                var userExist = await _userServices.GetUserById(userId);
 
                 if (userExist == null)
                 {
-                    return new JsonResult(new { Message = $"No existe el usuario con el id {id}" }) { StatusCode = 404 };
+                    return new JsonResult(new { Message = $"No existe el usuario con el id {userId}" }) { StatusCode = 404 };
                 }
 
-                if (!await _validateImageServices.Validate(file,id))
+                if (!await _validateImageServices.Validate(file,userId))
                 {
                     return new JsonResult(_validateImageServices.GetErrors()) { StatusCode = 400 };
                 }
 
-                bool uploadIsValid = await _serverImagesApiServices.UploadImage(file, id);
+                bool uploadIsValid = await _serverImagesApiServices.UploadImage(file, userId);
 
                 if (!uploadIsValid)
                 {
@@ -247,9 +262,9 @@ namespace Presentacion.Controllers
 
                 var url = _serverImagesApiServices.GetResponse().RootElement.GetProperty("link").ToString();
 
-                await _imageServices.UploadImage(id, url);
+                await _imageServices.UploadImage(userId, url);
 
-                var userResponse = await _userServices.GetUserById(id);
+                var userResponse = await _userServices.GetUserById(userId);
 
                 return new JsonResult(new { Message = "La foto se ha subido correctamente", Response = userResponse }) { StatusCode = 201 };
 

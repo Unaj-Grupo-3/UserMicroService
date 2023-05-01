@@ -1,11 +1,13 @@
 ﻿
 
+using Application.Models;
+
 namespace Application.Interfaces
 {
     public interface IImageServices
     {       
-        Task<IList<string>> UpdateImages(int userId, IList<int> images);
+        Task<IList<ImageResponse>> UpdateImages(int userId, IList<int> images);
 
-        Task<string> UploadImage(int userId, string url);
+        Task<ImageResponse> UploadImage(int userId, string url);
     }
 }

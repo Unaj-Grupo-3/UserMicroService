@@ -9,6 +9,5 @@ namespace Application.Models
         public string? Description { get; set; }
         public int? Gender { get; set; }
         public AuthReq? AuthReq { get; set; }
-        public IList<int>? Images { get; set; }
     }
 }
