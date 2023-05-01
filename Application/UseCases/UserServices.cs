@@ -98,7 +98,7 @@ namespace Application.UseCases
 
             if (users.Count == 0)
             {
-                return null;
+                return new List<UserResponse>();
             }
             foreach (var user in users)
             {
@@ -155,5 +155,71 @@ namespace Application.UseCases
 
             return response;
         }
+
+        public async Task<List<UserResponse>> GetUserByList()
+        {
+            var users = await _queries.GetUserByList();
+
+            List<UserResponse> userResponse = new List<UserResponse>();
+
+            if (users.Count == 0)
+            {
+                return new List<UserResponse>();
+            }
+            foreach (var user in users)
+            {
+                List<string> images = new List<string>();
+
+                if (user.Images.Count != 0)
+                {
+                    foreach (var image in user.Images)
+                    {
+                        images.Add(image.Url);
+                    }
+                }
+                UserResponse response = new UserResponse
+                {
+                    UserId = user.UserId,
+                    Name = user.Name,
+                    LastName = user.LastName,
+                    Birthday = user.Birthday,
+                    Gender = user.GenderId,
+                    Description = user.Description,
+                    Images = images
+                };
+                userResponse.Add(response);
+            }
+            return userResponse;
+        }
+
+        public async Task<List<UserResponse>> GetAllUserByIds(List<int> userIds)
+        {
+            List<UserResponse> listUserResponse = new List<UserResponse>();
+            var listUser = await _queries.GetAllUserByIds(userIds);
+
+            if (listUser.Any())
+            {
+                foreach (var user in listUser)
+                {
+                    UserResponse response = new UserResponse
+                    {
+                        UserId = user.UserId,
+                        Name = user.Name,
+                        LastName = user.LastName,
+                        Birthday = user.Birthday,
+                        Gender = user.GenderId,
+                        Description = user.Description,
+                        //Images = images
+                    };
+                    listUserResponse.Add(response);
+                }
+                return listUserResponse;
+            }
+            else
+            {
+                return new List<UserResponse>();
+            }
+        }
     }
+    
 }

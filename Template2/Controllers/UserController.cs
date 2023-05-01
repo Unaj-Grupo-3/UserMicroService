@@ -176,8 +176,8 @@ namespace Presentacion.Controllers
             }
         }
 
-        [HttpGet("api/users/{name?}")]
-        public async Task<IActionResult> GetAll(string? name=null)
+        [HttpGet("byName/{name?}")]
+        public async Task<IActionResult> GetAllByName(string? name=null)
         {
             try
             {
@@ -196,7 +196,46 @@ namespace Presentacion.Controllers
                 return new JsonResult(new { Message = "Se ha producido un error interno en el servidor." }) { StatusCode = 500 };
             }
         }
+        [HttpGet("user")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            try
+            {
+                var users = await _userServices.GetUserByList();
 
+                if (users == null)
+                {
+                    return NotFound();
+                }
+
+                return new JsonResult(users);
+
+            }
+            catch (Exception)
+            {
+                return new JsonResult(new { Message = "Se ha producido un error interno en el servidor." }) { StatusCode = 500 };
+            }
+        }
+        [HttpGet("userByIds/ids")]
+        public async Task<IActionResult> GetAllListUsers([FromQuery] List<int> usersId)
+        {
+            try
+            {
+                var users = await _userServices.GetAllUserByIds(usersId);
+
+                if (users == null)
+                {
+                    return NotFound();
+                }
+
+                return new JsonResult(users);
+
+            }
+            catch (Exception)
+            {
+                return new JsonResult(new { Message = "Se ha producido un error interno en el servidor." }) { StatusCode = 500 };
+            }
+        }
         // Usado en el micro de auth para generar el token. Si CreateUser se use en el MICRO-AUTH no hace falta tenerlo.
         [HttpGet("Auth/{authId}")]
         public async Task<IActionResult> GetUserByAuthId(Guid authId)

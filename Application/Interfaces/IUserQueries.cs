@@ -8,5 +8,7 @@ namespace Application.Interfaces
         Task<User> GetUserById(int userId);
         Task<List<User>> GetByFirstName(string? userFirstName);
         Task<User> GetUserByAuthId(Guid authId);
+        Task<List<User>> GetUserByList();
+        Task<List<User>> GetAllUserByIds(List<int> userIds);
     }
 }
