@@ -119,7 +119,7 @@ namespace Application.UseCases
 
             if (users.Count == 0)
             {
-                return null;
+                return new List<UserResponse>();
             }
             foreach (var user in users)
             {
@@ -188,5 +188,88 @@ namespace Application.UseCases
             return response;
         }
 
+        public async Task<List<UserResponse>> GetUserByList()
+        {
+            var users = await _queries.GetUserByList();
+
+            List<UserResponse> userResponse = new List<UserResponse>();
+
+            if (users.Count == 0)
+            {
+                return new List<UserResponse>();
+            }
+            foreach (var user in users)
+            {
+                List<ImageResponse> imagesResponse = new List<ImageResponse>();
+
+                foreach (var image in user.Images)
+                {
+                    ImageResponse imageResponse = new ImageResponse()
+                    {
+                        Id = image.ImageId,
+                        Url = image.Url,
+                    };
+
+                    imagesResponse.Add(imageResponse);
+                }
+
+                UserResponse response = new UserResponse
+                {
+                    UserId = user.UserId,
+                    Name = user.Name,
+                    LastName = user.LastName,
+                    Birthday = user.Birthday,
+                    Gender = user.GenderId,
+                    Description = user.Description,
+                    Images = imagesResponse
+                };
+                userResponse.Add(response);
+            }
+            return userResponse;
+        }
+
+        public async Task<List<UserResponse>> GetAllUserByIds(List<int> userIds)
+        {
+            List<UserResponse> listUserResponse = new List<UserResponse>();
+            var listUser = await _queries.GetAllUserByIds(userIds);
+
+            if (listUser.Any())
+            {
+                foreach (var user in listUser)
+                {
+                    List<ImageResponse> imagesResponse = new List<ImageResponse>();
+
+                    foreach (var image in user.Images)
+                    {
+                        ImageResponse imageResponse = new ImageResponse()
+                        {
+                            Id = image.ImageId,
+                            Url = image.Url,
+                        };
+
+                        imagesResponse.Add(imageResponse);
+                    }
+
+                    UserResponse response = new UserResponse
+                    {
+                        UserId = user.UserId,
+                        Name = user.Name,
+                        LastName = user.LastName,
+                        Birthday = user.Birthday,
+                        Gender = user.GenderId,
+                        Description = user.Description,
+                        Images = imagesResponse
+                    };
+
+                    listUserResponse.Add(response);
+                }
+                return listUserResponse;
+            }
+            else
+            {
+                return new List<UserResponse>();
+            }
+        }
     }
+    
 }

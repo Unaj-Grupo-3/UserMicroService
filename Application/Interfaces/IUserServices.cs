@@ -12,6 +12,10 @@ namespace Application.Interfaces
 
         Task<List<UserResponse>> GetByFirstName(string? userFirstName);
 
-        Task<UserResponse> GetUserByAuthId(Guid authId); 
+        Task<UserResponse> GetUserByAuthId(Guid authId);
+
+        Task<List<UserResponse>> GetUserByList();
+
+        Task<List<UserResponse>> GetAllUserByIds(List<int> userIds);
     }
 }
