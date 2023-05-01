@@ -8,5 +8,6 @@ namespace Application.Models
         public DateTime? Birthday { get; set; }
         public string? Description { get; set; }
         public int? Gender { get; set; }
+        public IList<int>? Images { get; set; }
     }
 }

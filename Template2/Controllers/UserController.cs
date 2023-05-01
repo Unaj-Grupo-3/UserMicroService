@@ -143,7 +143,24 @@ namespace Presentacion.Controllers
 
                 if (diccio.ElementAt(0).Key)
                 {
+                    IList<string> imagesUpdate = new List<string>();
+
+                    if (req.Images != null && req.Images.Count != 0)
+                    {
+                        if (!await _validateImageServices.ValidateImages(req.Images, userId))
+                        {
+                            return new JsonResult(new { Message = "Error en la carga de fotos", Response = _validateImageServices.GetErrors() }) { StatusCode = 200 };
+                        }
+
+                        imagesUpdate = await _imageServices.UpdateImages(userId, req.Images);
+                    }
+
                     var response = await _userServices.UpdateUser(userId, req);
+
+                    if (imagesUpdate.Count > 0)
+                    {
+                        response.Images = imagesUpdate;
+                    }
 
                     return new JsonResult(new { Message = "Se ha actualizado el usuario exitosamente.", Response = response }) { StatusCode = 200 };
                 }
