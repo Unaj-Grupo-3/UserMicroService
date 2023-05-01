@@ -1,6 +1,4 @@
-﻿
-
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +12,13 @@ namespace Infrastructure.Queries
         public UserQueries(ExpresoDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<List<User>> GetAllUserByIds(List<int> userIds)
+        {
+            List<User> mercaderias = await _context.Users.Where(u => userIds.Contains(u.UserId)).ToListAsync();
+
+            return mercaderias;
         }
 
         public async Task<List<User>> GetByFirstName(string? userFirstName)
@@ -48,6 +53,12 @@ namespace Infrastructure.Queries
             return user;
         }
 
+        public async Task<List<User>> GetUserByList()
+        {
+            var users = await _context.Users.Include(x => x.Images.OrderBy(x => x.Order))
+                                                 .ToListAsync();
 
+            return users;
+        }
     }
 }
