@@ -25,7 +25,7 @@ builder.Services.AddCors(policy =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Expreso de las diez - Microservicio de usuarios", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Expreso de las diez - Microservicio de Usuarios", Version = "v1" });
 
     //Boton Autorize (Swagger)
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme

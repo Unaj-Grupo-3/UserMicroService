@@ -1,11 +1,5 @@
 ﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Persistance
 {
@@ -14,8 +8,6 @@ namespace Infrastructure.Persistance
         public DbSet<User> Users { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<Image> Images { get; set; }
-        public DbSet<City> Cities { get; set; }
-        public DbSet<Province> Provinces { get; set; }
         public DbSet <Gender> Gender { get; set; }
 
         public ExpresoDbContext(DbContextOptions<ExpresoDbContext> options ) : base(options)
@@ -35,14 +27,18 @@ namespace Infrastructure.Persistance
                 entity.Property(e => e.LastName).HasMaxLength(50);
                 entity.Property(e => e.Description).HasMaxLength(255);
                 entity.Property(e => e.Birthday).HasColumnType("date");
+
                 entity.HasOne<Location>(l => l.Location)
-                        .WithMany(e => e.Users)
-                        .HasForeignKey(e => e.LocationId);
+                      .WithMany(e => e.Users)
+                      .HasForeignKey(e => e.LocationId);
 
                 entity.HasOne<Gender>(e => e.Gender)
-                    .WithMany(e => e.Users)
-                    .HasForeignKey(e => e.GenderId);
+                      .WithMany(e => e.Users)
+                      .HasForeignKey(e => e.GenderId);
 
+                entity.HasOne<Location>(e => e.Location)
+                      .WithMany(e => e.Users)
+                      .HasForeignKey(e => e.LocationId);
             });
 
 
@@ -50,26 +46,12 @@ namespace Infrastructure.Persistance
             {
                 entity.HasKey(e => e.LocationId);
                 entity.Property(e => e.LocationId).ValueGeneratedOnAdd();
+                entity.Property(e => e.Country).HasMaxLength(50).IsRequired();
+                entity.Property(e => e.Province).HasMaxLength(50).IsRequired();
+                entity.Property(e => e.City).HasMaxLength(50).IsRequired();
+                entity.Property(e => e.Latitude).IsRequired();
+                entity.Property(e => e.Longitude).IsRequired();
                 
-                entity.HasOne<City>(e => e.City)
-                        .WithMany(e => e.Location)
-                        .HasForeignKey(e => e.CityId);
-
-                entity.HasOne<Province>(e => e.Province)
-                        .WithMany(e => e.Location)
-                        .HasForeignKey(e => e.ProvinceId);
-            });
-
-            modelBuilder.Entity<City>(entity =>
-            {
-                entity.HasKey(e => e.CityId);
-                entity.Property(e => e.CityId).ValueGeneratedOnAdd();
-            });
-
-            modelBuilder.Entity<Province>(entity =>
-            {
-                entity.HasKey(e => e.ProvinceId);
-                entity.Property(e => e.ProvinceId).ValueGeneratedOnAdd();
             });
 
             modelBuilder.Entity<Image>(entity =>
@@ -79,8 +61,8 @@ namespace Infrastructure.Persistance
 
 
                 entity.HasOne<User>(e => e.User)
-                    .WithMany(e => e.Images)
-                    .HasForeignKey(e => e.UserId);
+                      .WithMany(e => e.Images)
+                      .HasForeignKey(e => e.UserId);
             });
 
             modelBuilder.Entity<Gender>(entity =>
