@@ -5,11 +5,11 @@ using System.Text.RegularExpressions;
 
 namespace Application.UseCases
 {
-    public class ValidateServices : IValidateServices
+    public class ValidateUserServices : IValidateUserServices
     {
         public Dictionary<string, string> errors { get; set; }
 
-        public ValidateServices() 
+        public ValidateUserServices() 
         {
             errors = new Dictionary<string, string>();        
         }
