@@ -13,7 +13,7 @@ namespace Presentacion.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserServices _userServices;
-        private readonly IValidateServices _validateServices;
+        private readonly IValidateUserServices _validateServices;
         private readonly IImageServices _imageServices;
         private readonly IValidateImageServices _validateImageServices;
         private readonly IAuthApiServices _authApiServices;
@@ -22,7 +22,7 @@ namespace Presentacion.Controllers
 
         public UserController(IServerImagesApiServices imgbbApiServices,
                               IUserServices userServices, 
-                              IValidateServices validateServices, 
+                              IValidateUserServices validateServices, 
                               IImageServices imageServices, 
                               IValidateImageServices validateImageServices, 
                               IAuthApiServices authApiServices,

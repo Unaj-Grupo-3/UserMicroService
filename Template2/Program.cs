@@ -79,7 +79,7 @@ builder.Services.AddTransient<IGenderServices, GenderServices>();
 builder.Services.AddTransient<IGenderQueries, GenderQueries>();
 
 builder.Services.AddTransient<IEncryptServices, EncryptServices>();
-builder.Services.AddTransient<IValidateServices, ValidateServices>();
+builder.Services.AddTransient<IValidateUserServices, ValidateUserServices>();
 builder.Services.AddTransient<IImageCommands, ImageCommands>();
 builder.Services.AddTransient<IImageQueries, ImageQueries>();
 builder.Services.AddTransient<IImageServices, ImageServices>();
@@ -87,7 +87,10 @@ builder.Services.AddTransient<IValidateImageServices, ValidateImageServices>();
 builder.Services.AddTransient<IServerImagesApiServices, ServerImagesApiServices>();
 builder.Services.AddTransient<IAuthApiServices, AuthApiServices>();
 
-
+builder.Services.AddTransient<IValidateLocationServices, ValidateLocationServices>();
+builder.Services.AddTransient<ILocationCommands, LocationCommands>();
+builder.Services.AddTransient<ILocationQueries, LocationQueries>();
+builder.Services.AddTransient<ILocationServices, LocationServices>();
 
 var app = builder.Build();
 

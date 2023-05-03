@@ -2,7 +2,7 @@
 
 namespace Application.Interfaces
 {
-    public interface IValidateServices
+    public interface IValidateUserServices
     {
         Task<bool> ValidateLenght(string verify, string tag, int maxLenght);
         Task<bool> ValidateCharacters(string verify, string tag);
