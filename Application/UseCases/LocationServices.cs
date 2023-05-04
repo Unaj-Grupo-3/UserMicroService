@@ -1,3 +1,4 @@
+
 using Application.Interfaces;
 using Application.Models;
 using System.Net.Http.Json;
@@ -40,7 +41,7 @@ namespace Application.UseCases
             }
             catch (System.Net.Http.HttpRequestException ex)
             {
-                _message = "Error en el microservicio de autenticación";
+                _message = "Error en el microservicio de autenticaciï¿½n";
                 _statusCode = 500;
                 return "";
             }
@@ -64,6 +65,5 @@ namespace Application.UseCases
         public int GetStatusCode()
         {
             return _statusCode;
-        }
     }
 }
