@@ -4,7 +4,7 @@ namespace Application.Interfaces
 {
     public interface IUserServices
     {
-        Task<UserResponse> AddUser(UserReq req, Guid authId);
+        Task<UserResponse> AddUser(UserReq req, Guid authId, Guid userId);
 
         Task<UserResponse> UpdateUser(Guid userId, UserUpdReq req);
 

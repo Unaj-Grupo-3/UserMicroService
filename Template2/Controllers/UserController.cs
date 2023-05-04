@@ -127,6 +127,7 @@ namespace Presentacion.Controllers
         // Tendria que ser creado en el momento que se crea un auth con valores predeterminados.(Crear en el micro de auth)
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> CreateUser(UserReq req)
         {
             try
@@ -146,11 +147,13 @@ namespace Presentacion.Controllers
                 }
 
                 if (diccio.ElementAt(0).Key) //validacion[0] true/false
-                {         
+                {
 
-                    Guid authId = Guid.NewGuid(); //token
+                    var identity = HttpContext.User.Identity as ClaimsIdentity;
+                    Guid userId = Guid.Parse(identity.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
+                    Guid authId = Guid.Parse(identity.Claims.FirstOrDefault(x => x.Type == "AuthId").Value);
 
-                    var response = await _userServices.AddUser(req, authId); //, userId
+                    var response = await _userServices.AddUser(req, authId, userId); 
 
                     return new JsonResult(new { Message = "Se ha creado el usuario exitosamente.", Response = response }) { StatusCode = 201 };
                 }

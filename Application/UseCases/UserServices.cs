@@ -15,12 +15,12 @@ namespace Application.UseCases
             _queries = userQueries;
         }
 
-        public async Task<UserResponse> AddUser(UserReq req, Guid authId)
+        public async Task<UserResponse> AddUser(UserReq req, Guid authId, Guid userId)
         {
 
             UserProfile user = new UserProfile
             {
-                UserId = Guid.Parse("e7abfd13-179f-4339-8128-3dd088549e32"),
+                UserId = userId,
                 Name = req.Name,
                 LastName = req.LastName,
                 Birthday = req.Birthday.Value,
