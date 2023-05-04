@@ -22,7 +22,7 @@ namespace Infrastructure.Persistance
             modelBuilder.Entity<User>(entity =>
             {
                 entity.HasKey(e => e.UserId);
-                entity.Property(e => e.UserId).ValueGeneratedOnAdd();
+                entity.Property(e => e.UserId).ValueGeneratedNever();
                 entity.Property(e => e.Name).HasMaxLength(50);
                 entity.Property(e => e.LastName).HasMaxLength(50);
                 entity.Property(e => e.Description).HasMaxLength(255);
