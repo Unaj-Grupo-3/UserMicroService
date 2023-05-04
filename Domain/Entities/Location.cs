@@ -8,6 +8,6 @@
         public string Country { get; set; }
         public string Province { get; set; }
         public string City { get; set; }
-        public IList<User> Users { get; set; }
+        public IList<UserProfile> Users { get; set; }
     }
 }

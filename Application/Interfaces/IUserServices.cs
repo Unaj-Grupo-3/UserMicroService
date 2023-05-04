@@ -6,9 +6,9 @@ namespace Application.Interfaces
     {
         Task<UserResponse> AddUser(UserReq req, Guid authId);
 
-        Task<UserResponse> UpdateUser(int userId, UserUpdReq req);
+        Task<UserResponse> UpdateUser(Guid userId, UserUpdReq req);
 
-        Task<UserResponse> GetUserById(int userId);
+        Task<UserResponse> GetUserById(Guid userId);
 
         Task<List<UserResponse>> GetByFirstName(string? userFirstName);
 
@@ -16,6 +16,6 @@ namespace Application.Interfaces
 
         Task<List<UserResponse>> GetUserByList();
 
-        Task<List<UserResponse>> GetAllUserByIds(List<int> userIds);
+        Task<List<UserResponse>> GetAllUserByIds(List<Guid> userIds);
     }
 }

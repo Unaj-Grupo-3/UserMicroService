@@ -17,7 +17,7 @@ namespace Application.UseCases
             _imageQueries = imageQueries;
         }
 
-        public async Task<bool> Validate(IFormFile photo, int userId)
+        public async Task<bool> Validate(IFormFile photo, Guid userId)
         {
                 if ((await _imageQueries.GetImageByUserId(userId)).Count >= 6)
                 {
@@ -45,7 +45,7 @@ namespace Application.UseCases
 
         }
 
-        public async Task<bool> ValidateImages(IList<int> images, int userId)
+        public async Task<bool> ValidateImages(IList<int> images, Guid userId)
         {
             foreach (int imageId in images)
             {

@@ -18,8 +18,9 @@ namespace Application.UseCases
         public async Task<UserResponse> AddUser(UserReq req, Guid authId)
         {
 
-            User user = new User
+            UserProfile user = new UserProfile
             {
+                UserId = Guid.Parse("e7abfd13-179f-4339-8128-3dd088549e32"),
                 Name = req.Name,
                 LastName = req.LastName,
                 Birthday = req.Birthday.Value,
@@ -28,7 +29,7 @@ namespace Application.UseCases
                 AuthId = authId
             };
 
-            User create = await _commands.InsertUser(user);
+            UserProfile create = await _commands.InsertUser(user);
 
             UserResponse resp = new UserResponse
             {
@@ -44,7 +45,7 @@ namespace Application.UseCases
             return resp;
         }
 
-        public async Task<UserResponse> UpdateUser(int userId, UserUpdReq req)
+        public async Task<UserResponse> UpdateUser(Guid userId, UserUpdReq req)
         {
             var updated = await _commands.UpdateUser(userId, req);
 
@@ -75,9 +76,9 @@ namespace Application.UseCases
             return response;    
         }
 
-        public async Task<UserResponse> GetUserById(int userId)
+        public async Task<UserResponse> GetUserById(Guid userId)
         {
-            User user = await _queries.GetUserById(userId);
+            UserProfile user = await _queries.GetUserById(userId);
 
             if (user == null)
             {
@@ -154,7 +155,7 @@ namespace Application.UseCases
 
         public async Task<UserResponse> GetUserByAuthId(Guid authId)
         {
-            User user = await _queries.GetUserByAuthId(authId);
+            UserProfile user = await _queries.GetUserByAuthId(authId);
 
             if (user == null)
             {
@@ -228,7 +229,7 @@ namespace Application.UseCases
             return userResponse;
         }
 
-        public async Task<List<UserResponse>> GetAllUserByIds(List<int> userIds)
+        public async Task<List<UserResponse>> GetAllUserByIds(List<Guid> userIds)
         {
             List<UserResponse> listUserResponse = new List<UserResponse>();
             var listUser = await _queries.GetAllUserByIds(userIds);

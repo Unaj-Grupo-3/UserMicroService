@@ -6,6 +6,6 @@
         public string Description { get; set; }
 
         // Foreing Keys relation
-        public IList<User> Users { get; set; }
+        public IList<UserProfile> Users { get; set; }
     }
 }

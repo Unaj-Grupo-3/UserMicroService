@@ -15,7 +15,7 @@ namespace Infrastructure.Commands
             _context = context;
         }
 
-        public async Task<User> InsertUser(User user)
+        public async Task<UserProfile> InsertUser(UserProfile user)
         {
             _context.Add(user);
 
@@ -24,9 +24,9 @@ namespace Infrastructure.Commands
             return user;
         }
 
-        public async Task<User> UpdateUser(int userId, UserUpdReq user)
+        public async Task<UserProfile> UpdateUser(Guid userId, UserUpdReq user)
         {
-            User updated = await _context.Users.FirstOrDefaultAsync(x => x.UserId == userId);
+            UserProfile updated = await _context.Users.FirstOrDefaultAsync(x => x.UserId == userId);
 
             updated.Name = user.Name != null ? user.Name : updated.Name;
             updated.LastName = user.LastName != null ? user.LastName : updated.LastName;

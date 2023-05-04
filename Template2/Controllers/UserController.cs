@@ -44,7 +44,7 @@ namespace Presentacion.Controllers
             try
             {
                 var identity = HttpContext.User.Identity as ClaimsIdentity;
-                int userId = int.Parse(identity.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
+                Guid userId = Guid.Parse(identity.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
 
                 UserResponse response = await _userServices.GetUserById(userId);
 
@@ -83,7 +83,7 @@ namespace Presentacion.Controllers
         }
 
         [HttpGet("userByIds/ids")]
-        public async Task<IActionResult> GetAllListUsers([FromQuery] List<int> usersId)
+        public async Task<IActionResult> GetAllListUsers([FromQuery] List<Guid> usersId)
         {
             try
             {
@@ -125,6 +125,7 @@ namespace Presentacion.Controllers
         }
 
         // Tendria que ser creado en el momento que se crea un auth con valores predeterminados.(Crear en el micro de auth)
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
         public async Task<IActionResult> CreateUser(UserReq req)
         {
@@ -144,19 +145,12 @@ namespace Presentacion.Controllers
                     return new JsonResult(new { Message = $"No existe un genero con el id {req.Gender.Value}" }) { StatusCode = 404 };
                 }
 
-                if (diccio.ElementAt(0).Key)
-                {
+                if (diccio.ElementAt(0).Key) //validacion[0] true/false
+                {         
 
-                    bool postIsValid = await _authApiServices.CreateAuth(req.AuthReq);
+                    Guid authId = Guid.NewGuid(); //token
 
-                    if (!postIsValid)
-                    {
-                        return new JsonResult(new { Message = _authApiServices.GetMessage(), Response = _authApiServices.GetResponse() }) { StatusCode = _authApiServices.GetStatusCode() };
-                    }
-
-                    Guid authId = Guid.Parse(_authApiServices.GetResponse().RootElement.GetProperty("id").GetString());
-
-                    var response = await _userServices.AddUser(req, authId);
+                    var response = await _userServices.AddUser(req, authId); //, userId
 
                     return new JsonResult(new { Message = "Se ha creado el usuario exitosamente.", Response = response }) { StatusCode = 201 };
                 }
@@ -182,7 +176,7 @@ namespace Presentacion.Controllers
             {
                 var identity = HttpContext.User.Identity as ClaimsIdentity;
 
-                int userId = int.Parse(identity.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
+                Guid userId = Guid.Parse(identity.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
 
                 var userExist = await _userServices.GetUserById(userId);
 
@@ -227,7 +221,7 @@ namespace Presentacion.Controllers
             try
             {
                 var identity = HttpContext.User.Identity as ClaimsIdentity;
-                int userId = int.Parse(identity.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
+                Guid userId = Guid.Parse(identity.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
 
                 var userExist = await _userServices.GetUserById(userId);
 
@@ -246,16 +240,7 @@ namespace Presentacion.Controllers
                     }
                 }
 
-                UserReq userReq = new UserReq()
-                {
-                    Name = req.Name,
-                    LastName = req.LastName,
-                    Birthday = req.Birthday,
-                    Gender = req.Gender,
-                    Description = req.Description
-                };
-
-                var diccio = _validateServices.Validate(userReq, true).Result;
+                var diccio = _validateServices.Validate(req, true).Result;
 
                 var algo = diccio.ElementAt(0).Key;
 

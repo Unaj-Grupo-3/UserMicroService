@@ -11,6 +11,6 @@ namespace Application.Models
     {
         public Guid Id { get; set; }
         public string Email { get; set; }
-        public User User { get; set; }
+        public UserProfile User { get; set; }
     }
 }

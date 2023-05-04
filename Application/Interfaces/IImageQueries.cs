@@ -5,7 +5,7 @@ namespace Application.Interfaces
 {
     public interface IImageQueries
     {
-        Task<IList<Image>> GetImageByUserId(int userId);
+        Task<IList<Image>> GetImageByUserId(Guid userId);
 
         Task<Image> GetImageById(int id);
     }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ExpresoDbContext))]
-    [Migration("20230425082643_gender")]
-    partial class gender
+    [Migration("20230504032050_userIdGuid")]
+    partial class userIdGuid
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,23 +24,6 @@ namespace Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Domain.Entities.City", b =>
-                {
-                    b.Property<int>("CityId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CityId"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("CityId");
-
-                    b.ToTable("Cities");
-                });
 
             modelBuilder.Entity("Domain.Entities.Gender", b =>
                 {
@@ -92,8 +75,8 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("ImageId");
 
@@ -110,45 +93,37 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LocationId"));
 
-                    b.Property<int>("CityId")
-                        .HasColumnType("int");
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("ProvinceId")
-                        .HasColumnType("int");
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Province")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("LocationId");
-
-                    b.HasIndex("CityId");
-
-                    b.HasIndex("ProvinceId");
 
                     b.ToTable("Locations");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Province", b =>
+            modelBuilder.Entity("Domain.Entities.UserProfile", b =>
                 {
-                    b.Property<int>("ProvinceId")
+                    b.Property<Guid>("UserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProvinceId"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ProvinceId");
-
-                    b.ToTable("Provinces");
-                });
-
-            modelBuilder.Entity("Domain.Entities.User", b =>
-                {
-                    b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("AuthId")
                         .HasColumnType("uniqueidentifier");
@@ -177,10 +152,12 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int>("UserStatus")
+                        .HasColumnType("int");
+
                     b.HasKey("UserId");
 
-                    b.HasIndex("GenderId")
-                        .IsUnique();
+                    b.HasIndex("GenderId");
 
                     b.HasIndex("LocationId");
 
@@ -189,7 +166,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Image", b =>
                 {
-                    b.HasOne("Domain.Entities.User", "User")
+                    b.HasOne("Domain.Entities.UserProfile", "User")
                         .WithMany("Images")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -198,30 +175,11 @@ namespace Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Location", b =>
-                {
-                    b.HasOne("Domain.Entities.City", "City")
-                        .WithMany("Location")
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Province", "Province")
-                        .WithMany("Location")
-                        .HasForeignKey("ProvinceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("City");
-
-                    b.Navigation("Province");
-                });
-
-            modelBuilder.Entity("Domain.Entities.User", b =>
+            modelBuilder.Entity("Domain.Entities.UserProfile", b =>
                 {
                     b.HasOne("Domain.Entities.Gender", "Gender")
-                        .WithOne("User")
-                        .HasForeignKey("Domain.Entities.User", "GenderId")
+                        .WithMany("Users")
+                        .HasForeignKey("GenderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -234,15 +192,9 @@ namespace Infrastructure.Migrations
                     b.Navigation("Location");
                 });
 
-            modelBuilder.Entity("Domain.Entities.City", b =>
-                {
-                    b.Navigation("Location");
-                });
-
             modelBuilder.Entity("Domain.Entities.Gender", b =>
                 {
-                    b.Navigation("User")
-                        .IsRequired();
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Domain.Entities.Location", b =>
@@ -250,12 +202,7 @@ namespace Infrastructure.Migrations
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Province", b =>
-                {
-                    b.Navigation("Location");
-                });
-
-            modelBuilder.Entity("Domain.Entities.User", b =>
+            modelBuilder.Entity("Domain.Entities.UserProfile", b =>
                 {
                     b.Navigation("Images");
                 });

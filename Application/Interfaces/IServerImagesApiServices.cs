@@ -6,7 +6,7 @@ namespace Application.Interfaces
 {
     public interface IServerImagesApiServices
     {
-        Task<bool> UploadImage(IFormFile photo, int userId);
+        Task<bool> UploadImage(IFormFile photo, Guid userId);
 
         string GetMessage();
 

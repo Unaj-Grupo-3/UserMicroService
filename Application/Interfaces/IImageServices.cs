@@ -6,8 +6,8 @@ namespace Application.Interfaces
 {
     public interface IImageServices
     {       
-        Task<IList<ImageResponse>> UpdateImages(int userId, IList<int> images);
+        Task<IList<ImageResponse>> UpdateImages(Guid userId, IList<int> images);
 
-        Task<ImageResponse> UploadImage(int userId, string url);
+        Task<ImageResponse> UploadImage(Guid userId, string url);
     }
 }

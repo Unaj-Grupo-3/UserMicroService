@@ -5,8 +5,8 @@ namespace Application.Interfaces
 {
     public interface IUserCommands
     {
-        Task<User> InsertUser(User user);
+        Task<UserProfile> InsertUser(UserProfile user);
 
-        Task<User> UpdateUser(int userId, UserUpdReq user);
+        Task<UserProfile> UpdateUser(Guid userId, UserUpdReq user);
     }
 }

@@ -25,7 +25,7 @@ namespace Application.UseCases
             _httpClient = new HttpClient();
         }
 
-        public async Task<bool> UploadImage(IFormFile file, int userId)
+        public async Task<bool> UploadImage(IFormFile file, Guid userId)
         {
             try
             {

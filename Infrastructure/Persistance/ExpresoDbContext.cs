@@ -5,7 +5,7 @@ namespace Infrastructure.Persistance
 {
     public class ExpresoDbContext : DbContext
     {
-        public DbSet<User> Users { get; set; }
+        public DbSet<UserProfile> Users { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<Image> Images { get; set; }
         public DbSet <Gender> Gender { get; set; }
@@ -19,10 +19,9 @@ namespace Infrastructure.Persistance
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>(entity =>
+            modelBuilder.Entity<UserProfile>(entity =>
             {
                 entity.HasKey(e => e.UserId);
-                entity.Property(e => e.UserId).ValueGeneratedOnAdd();
                 entity.Property(e => e.Name).HasMaxLength(50);
                 entity.Property(e => e.LastName).HasMaxLength(50);
                 entity.Property(e => e.Description).HasMaxLength(255);
@@ -60,7 +59,7 @@ namespace Infrastructure.Persistance
                 entity.Property(e => e.ImageId).ValueGeneratedOnAdd();
 
 
-                entity.HasOne<User>(e => e.User)
+                entity.HasOne<UserProfile>(e => e.User)
                       .WithMany(e => e.Images)
                       .HasForeignKey(e => e.UserId);
             });

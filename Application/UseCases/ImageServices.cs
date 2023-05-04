@@ -17,7 +17,7 @@ namespace Application.UseCases
             _queries = queries;
         }
 
-        public async Task<IList<ImageResponse>> UpdateImages(int userId, IList<int> images)
+        public async Task<IList<ImageResponse>> UpdateImages(Guid userId, IList<int> images)
         {
             IList<Image> imagesByUserId = await _queries.GetImageByUserId(userId);
             IList<Image> imagesToUpdate = new List<Image>();
@@ -77,7 +77,7 @@ namespace Application.UseCases
             return response;
         }
 
-        public async Task<ImageResponse> UploadImage(int userId, string url)
+        public async Task<ImageResponse> UploadImage(Guid userId, string url)
         {
             IList<Image> imagesByUserId = await _queries.GetImageByUserId(userId);
 

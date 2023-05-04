@@ -72,8 +72,8 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("ImageId");
 
@@ -116,13 +116,11 @@ namespace Infrastructure.Migrations
                     b.ToTable("Locations");
                 });
 
-            modelBuilder.Entity("Domain.Entities.User", b =>
+            modelBuilder.Entity("Domain.Entities.UserProfile", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<Guid>("UserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("AuthId")
                         .HasColumnType("uniqueidentifier");
@@ -151,6 +149,9 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int>("UserStatus")
+                        .HasColumnType("int");
+
                     b.HasKey("UserId");
 
                     b.HasIndex("GenderId");
@@ -162,7 +163,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Image", b =>
                 {
-                    b.HasOne("Domain.Entities.User", "User")
+                    b.HasOne("Domain.Entities.UserProfile", "User")
                         .WithMany("Images")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -171,7 +172,7 @@ namespace Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Domain.Entities.User", b =>
+            modelBuilder.Entity("Domain.Entities.UserProfile", b =>
                 {
                     b.HasOne("Domain.Entities.Gender", "Gender")
                         .WithMany("Users")
@@ -198,7 +199,7 @@ namespace Infrastructure.Migrations
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("Domain.Entities.User", b =>
+            modelBuilder.Entity("Domain.Entities.UserProfile", b =>
                 {
                     b.Navigation("Images");
                 });

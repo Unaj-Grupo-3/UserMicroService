@@ -14,15 +14,15 @@ namespace Infrastructure.Queries
             _context = context;
         }
 
-        public async Task<List<User>> GetAllUserByIds(List<int> userIds)
+        public async Task<List<UserProfile>> GetAllUserByIds(List<Guid> userIds)
         {
-            List<User> users = await _context.Users.Include(u => u.Images.OrderBy(x => x.Order))
+            List<UserProfile> users = await _context.Users.Include(u => u.Images.OrderBy(x => x.Order))
                                                          .Where(u => userIds.Contains(u.UserId)).ToListAsync();
 
             return users;
         }
 
-        public async Task<List<User>> GetByFirstName(string? userFirstName)
+        public async Task<List<UserProfile>> GetByFirstName(string? userFirstName)
         {
             if (userFirstName == null)
             {
@@ -40,21 +40,21 @@ namespace Infrastructure.Queries
             }
         }
 
-        public async Task<User> GetUserByAuthId(Guid authId)
+        public async Task<UserProfile> GetUserByAuthId(Guid authId)
         {
-            User user = await _context.Users.Include(x => x.Images.OrderBy(x => x.Order)).FirstOrDefaultAsync(x => x.AuthId == authId);
+            UserProfile user = await _context.Users.Include(x => x.Images.OrderBy(x => x.Order)).FirstOrDefaultAsync(x => x.AuthId == authId);
 
             return user;
         }
 
-        public async Task<User> GetUserById(int userId)
+        public async Task<UserProfile> GetUserById(Guid userId)
         {
-            User user = await _context.Users.Include(x => x.Images.OrderBy(x => x.Order)).FirstOrDefaultAsync(x => x.UserId == userId);
+            UserProfile user = await _context.Users.Include(x => x.Images.OrderBy(x => x.Order)).FirstOrDefaultAsync(x => x.UserId == userId);
 
             return user;
         }
 
-        public async Task<List<User>> GetUserByList()
+        public async Task<List<UserProfile>> GetUserByList()
         {
             var users = await _context.Users.Include(x => x.Images.OrderBy(x => x.Order))
                                                  .ToListAsync();
