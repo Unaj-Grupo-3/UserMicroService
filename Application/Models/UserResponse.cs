@@ -12,5 +12,6 @@ namespace Application.Models
         public int Gender { get; set; }
         public Location? Location { get; set; }
         public IList<ImageResponse> Images { get; set; }
+        public int? UserStatus { get; set; }
     }
 }

@@ -15,17 +15,19 @@ namespace Application.UseCases
             _queries = userQueries;
         }
 
-        public async Task<UserResponse> AddUser(UserReq req, Guid authId)
+        public async Task<UserResponse> AddUser(UserReq req, Guid authId, int userId)
         {
 
             User user = new User
             {
+                UserId = userId,
                 Name = req.Name,
                 LastName = req.LastName,
                 Birthday = req.Birthday.Value,
                 Description = req.Description,
                 GenderId = req.Gender.Value,
-                AuthId = authId
+                AuthId = authId,
+                UserStatus = 0,
             };
 
             User create = await _commands.InsertUser(user);

@@ -6,7 +6,7 @@ using System.Text.Json;
 
 namespace Application.UseCases
 {
-    public class LocationServices: ILocationServices
+    public class LocationServices : ILocationServices
     {
         private string _message;
         private string _response;
@@ -65,5 +65,6 @@ namespace Application.UseCases
         public int GetStatusCode()
         {
             return _statusCode;
+        }
     }
 }
