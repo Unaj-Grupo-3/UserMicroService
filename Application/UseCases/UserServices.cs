@@ -15,7 +15,7 @@ namespace Application.UseCases
             _queries = userQueries;
         }
 
-        public async Task<UserResponse> AddUser(UserReq req, Guid authId, int userId)
+        public async Task<UserResponse> AddUser(UserReq req, Guid authId, int userId, int locationId)
         {
 
             User user = new User
@@ -28,51 +28,21 @@ namespace Application.UseCases
                 GenderId = req.Gender.Value,
                 AuthId = authId,
                 UserStatus = 0,
+                LocationId = locationId,
             };
 
             User create = await _commands.InsertUser(user);
 
-            UserResponse resp = new UserResponse
-            {
-                UserId = create.UserId,
-                Name = create.Name,
-                LastName = create.LastName,
-                Birthday = create.Birthday,
-                Description = create.Description,
-                Gender = create.GenderId,
-                Images = new List<ImageResponse>()
-            };
-
+            UserResponse resp = MapperUserToUserResponse(create);
+            
             return resp;
         }
 
-        public async Task<UserResponse> UpdateUser(int userId, UserUpdReq req)
+        public async Task<UserResponse> UpdateUser(int userId, UserUpdReq req, int locationId)
         {
-            var updated = await _commands.UpdateUser(userId, req);
+            var updated = await _commands.UpdateUser(userId, req, locationId);
 
-            List<ImageResponse> imagesResponse = new List<ImageResponse>();
-
-            foreach (var image in updated.Images)
-            {
-                ImageResponse imageResponse = new ImageResponse()
-                {
-                    Id = image.ImageId,
-                    Url = image.Url,
-                };
-
-                imagesResponse.Add(imageResponse);
-            }
-
-            UserResponse response = new UserResponse
-            {
-                UserId = updated.UserId,
-                Name = updated.Name,
-                LastName = updated.LastName,
-                Birthday = updated.Birthday,
-                Description = updated.Description,
-                Gender = updated.GenderId,
-                Images = imagesResponse
-            };
+            UserResponse response = MapperUserToUserResponse(updated);
 
             return response;    
         }
@@ -86,29 +56,7 @@ namespace Application.UseCases
                 return null;
             }
 
-            List<ImageResponse> imagesResponse = new List<ImageResponse>();
-
-            foreach(var image in user.Images)
-            {
-                ImageResponse imageResponse = new ImageResponse()
-                {
-                    Id = image.ImageId,
-                    Url = image.Url,
-                };
-
-                imagesResponse.Add(imageResponse);
-            }
-
-            UserResponse response = new UserResponse
-            {
-                UserId = user.UserId,
-                Name = user.Name,
-                LastName = user.LastName,
-                Birthday = user.Birthday,
-                Gender = user.GenderId,
-                Description = user.Description,
-                Images = imagesResponse
-            };
+            UserResponse response = MapperUserToUserResponse(user);
 
             return response;
         }
@@ -125,29 +73,7 @@ namespace Application.UseCases
             }
             foreach (var user in users)
             {
-                List<ImageResponse> imagesResponse = new List<ImageResponse>();
-
-                foreach (var image in user.Images)
-                {
-                    ImageResponse imageResponse = new ImageResponse()
-                    {
-                        Id = image.ImageId,
-                        Url = image.Url,
-                    };
-
-                    imagesResponse.Add(imageResponse);
-                }
-
-                UserResponse response = new UserResponse
-                {
-                    UserId = user.UserId,
-                    Name = user.Name,
-                    LastName = user.LastName,
-                    Birthday = user.Birthday,
-                    Gender = user.GenderId,
-                    Description = user.Description,
-                    Images = imagesResponse
-                };
+                UserResponse response = MapperUserToUserResponse(user);
 
                 userResponse.Add(response);
             }
@@ -163,29 +89,7 @@ namespace Application.UseCases
                 return null;
             }
 
-            List<ImageResponse> imagesResponse = new List<ImageResponse>();
-
-            foreach (var image in user.Images)
-            {
-                ImageResponse imageResponse = new ImageResponse()
-                {
-                    Id = image.ImageId,
-                    Url = image.Url,
-                };
-
-                imagesResponse.Add(imageResponse);
-            }
-
-            UserResponse response = new UserResponse
-            {
-                UserId = user.UserId,
-                Name = user.Name,
-                LastName = user.LastName,
-                Birthday = user.Birthday,
-                Gender = user.GenderId,
-                Description = user.Description,
-                Images = imagesResponse
-            };
+            UserResponse response = MapperUserToUserResponse(user);
 
             return response;
         }
@@ -202,29 +106,8 @@ namespace Application.UseCases
             }
             foreach (var user in users)
             {
-                List<ImageResponse> imagesResponse = new List<ImageResponse>();
+                UserResponse response = MapperUserToUserResponse(user);
 
-                foreach (var image in user.Images)
-                {
-                    ImageResponse imageResponse = new ImageResponse()
-                    {
-                        Id = image.ImageId,
-                        Url = image.Url,
-                    };
-
-                    imagesResponse.Add(imageResponse);
-                }
-
-                UserResponse response = new UserResponse
-                {
-                    UserId = user.UserId,
-                    Name = user.Name,
-                    LastName = user.LastName,
-                    Birthday = user.Birthday,
-                    Gender = user.GenderId,
-                    Description = user.Description,
-                    Images = imagesResponse
-                };
                 userResponse.Add(response);
             }
             return userResponse;
@@ -239,29 +122,7 @@ namespace Application.UseCases
             {
                 foreach (var user in listUser)
                 {
-                    List<ImageResponse> imagesResponse = new List<ImageResponse>();
-
-                    foreach (var image in user.Images)
-                    {
-                        ImageResponse imageResponse = new ImageResponse()
-                        {
-                            Id = image.ImageId,
-                            Url = image.Url,
-                        };
-
-                        imagesResponse.Add(imageResponse);
-                    }
-
-                    UserResponse response = new UserResponse
-                    {
-                        UserId = user.UserId,
-                        Name = user.Name,
-                        LastName = user.LastName,
-                        Birthday = user.Birthday,
-                        Gender = user.GenderId,
-                        Description = user.Description,
-                        Images = imagesResponse
-                    };
+                    UserResponse response = MapperUserToUserResponse(user);
 
                     listUserResponse.Add(response);
                 }
@@ -271,6 +132,51 @@ namespace Application.UseCases
             {
                 return new List<UserResponse>();
             }
+        }
+
+        private UserResponse MapperUserToUserResponse(User user)
+        {
+            List<ImageResponse> imagesResponse = new List<ImageResponse>();
+
+            if (user.Images != null)
+            {
+                foreach (var image in user.Images)
+                {
+                    ImageResponse imageResponse = new ImageResponse()
+                    {
+                        Id = image.ImageId,
+                        Url = image.Url,
+                    };
+
+                    imagesResponse.Add(imageResponse);
+                }
+            }
+
+            string address = $"{user.Location.City}, {user.Location.Province}, {user.Location.Country}";
+
+            UserResponse response = new UserResponse
+            {
+                UserId = user.UserId,
+                Name = user.Name,
+                LastName = user.LastName,
+                Birthday = user.Birthday,
+                Gender = new GenderResponse()
+                {
+                    GenderId = user.GenderId,
+                    Description = user.Gender.Description,
+                },
+                Description = user.Description,
+                Images = imagesResponse,
+                Location = new LocationResponse()
+                {
+                    Id = user.Location.LocationId,
+                    Latitude = user.Location.Latitude,
+                    Longitude = user.Location.Longitude,
+                    Address = address
+                }
+            };
+
+            return response;
         }
     }
     

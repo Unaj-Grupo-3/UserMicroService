@@ -1,70 +1,87 @@
-
+﻿
 using Application.Interfaces;
 using Application.Models;
-using System.Net.Http.Json;
-using System.Text.Json;
+using Domain.Entities;
 
 namespace Application.UseCases
 {
     public class LocationServices : ILocationServices
     {
-        private string _message;
-        private string _response;
-        private int _statusCode;
-        private string _url;
-        private string _key;
-        private HttpClient _httpClient;
+        private readonly ILocationCommands _commands;
+        private readonly ILocationQueries _queries;
 
-        public LocationServices()
+        public LocationServices(ILocationCommands commands, ILocationQueries queries)
         {
-            _url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=";
-            _key = "AIzaSyBY5G5xHHpWM8DlcK6Xqh4WqIHmkqvSDXc";
-            var handler = new HttpClientHandler();
-            handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
-            _httpClient = new HttpClient(handler);
+            _commands = commands;
+            _queries = queries;
         }
 
-        public async Task<string> GetLocation(string req)
+
+        public async Task<LocationResponse> AddLocation(LocationReq req)
         {
-            try
-            {
-                string content = _url + req + "&key=" + _key;
-                var responseApi = await _httpClient.GetAsync(content);
+            Location location = LocationReqToLocation(req);
 
-                var responseContent = await responseApi.Content.ReadAsStringAsync();
-                var responseObject = JsonDocument.Parse(responseContent).RootElement;
-                //_message = responseObject.GetProperty("message").GetString();
-                //_response = responseObject.GetProperty("response").ToString();
-                //_statusCode = (int)responseApi.StatusCode;
+            Location create = await _commands.InsertLocation(location);
 
-                return responseObject.ToString();
-            }
-            catch (System.Net.Http.HttpRequestException ex)
-            {
-                _message = "Error en el microservicio de autenticaci�n";
-                _statusCode = 500;
-                return "";
-            }
+            return LocationToLocationResponse(create);
+
         }
 
-        public string GetMessage()
+        public async Task<LocationResponse> GetLocationByCity(string city)
         {
-            return _message;
-        }
+            Location locationByCity = await _queries.GetLocationByAddress(city);
 
-        public JsonDocument GetResponse()
-        {
-            if (_response == null)
+            if (locationByCity == null)
             {
-                return JsonDocument.Parse("{}");
+                return null;
             }
 
-            return JsonDocument.Parse(_response);
+            return LocationToLocationResponse(locationByCity);
         }
 
-        public int GetStatusCode()
+        public async Task<LocationResponse> GetLocationByCoords(double latitude, double longitude)
         {
-            return _statusCode;
+            Location locationByCoords = await _queries.GetLocationByCoords(latitude, longitude);
+
+            if (locationByCoords == null)
+            {
+                return null;
+            }
+
+            return LocationToLocationResponse(locationByCoords);
+        }
+
+        public async Task<LocationResponse> UpdateLocation(LocationReq req)
+        {
+            Location location = LocationReqToLocation(req);
+
+            Location updated = await _commands.UpdateLocation(location);
+
+            return LocationToLocationResponse(updated);
+        }
+
+        private Location LocationReqToLocation(LocationReq req)
+        {
+
+            return new Location
+            {
+                Latitude = req.Latitude.Value,
+                Longitude = req.Longitude.Value,
+                City = req.City,
+                Province = req.Province,
+                Country = req.Country,
+            };
+        }
+
+        private LocationResponse LocationToLocationResponse(Location location)
+        {
+            return new LocationResponse
+            {
+                Id = location.LocationId,
+                Latitude = location.Latitude,
+                Longitude = location.Longitude,
+                Address = $"{location.City}, {location.Province}, {location.Country}"
+            };
         }
     }
 }

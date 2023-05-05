@@ -24,7 +24,7 @@ namespace Infrastructure.Commands
             return user;
         }
 
-        public async Task<User> UpdateUser(int userId, UserUpdReq user)
+        public async Task<User> UpdateUser(int userId, UserUpdReq user, int locationId)
         {
             User updated = await _context.Users.FirstOrDefaultAsync(x => x.UserId == userId);
 
@@ -33,6 +33,7 @@ namespace Infrastructure.Commands
             updated.Birthday = user.Birthday != null ? user.Birthday.Value : updated.Birthday;
             updated.GenderId = user.Gender != null ? user.Gender.Value : updated.GenderId;
             updated.Description = user.Description != null ? user.Description : updated.Description;
+            updated.LocationId = locationId;
 
             await _context.SaveChangesAsync();
 
