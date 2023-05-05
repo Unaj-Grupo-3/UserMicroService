@@ -121,9 +121,6 @@ namespace Infrastructure.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("AuthId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("Birthday")
                         .HasColumnType("date");
 

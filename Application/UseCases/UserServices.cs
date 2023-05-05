@@ -15,7 +15,7 @@ namespace Application.UseCases
             _queries = userQueries;
         }
 
-        public async Task<UserResponse> AddUser(UserReq req, Guid authId, int userId, int locationId)
+        public async Task<UserResponse> AddUser(UserReq req, int userId, int locationId)
         {
 
             User user = new User
@@ -26,7 +26,6 @@ namespace Application.UseCases
                 Birthday = req.Birthday.Value,
                 Description = req.Description,
                 GenderId = req.Gender.Value,
-                AuthId = authId,
                 UserStatus = 0,
                 LocationId = locationId,
             };
@@ -78,20 +77,6 @@ namespace Application.UseCases
                 userResponse.Add(response);
             }
             return userResponse;
-        }
-
-        public async Task<UserResponse> GetUserByAuthId(Guid authId)
-        {
-            User user = await _queries.GetUserByAuthId(authId);
-
-            if (user == null)
-            {
-                return null;
-            }
-
-            UserResponse response = MapperUserToUserResponse(user);
-
-            return response;
         }
 
         public async Task<List<UserResponse>> GetUserByList()
@@ -152,7 +137,17 @@ namespace Application.UseCases
                 }
             }
 
-            string address = $"{user.Location.City}, {user.Location.Province}, {user.Location.Country}";
+            LocationResponse location = new LocationResponse();
+
+            if (user.Location != null)
+            {
+                location.Id = user.Location.LocationId;
+                location.Latitude = user.Location.Latitude;
+                location.Longitude = user.Location.Longitude;
+                location.Address = $"{user.Location.City}, {user.Location.Province}, {user.Location.Country}";
+            }
+
+            //string address = $"{user.Location.City}, {user.Location.Province}, {user.Location.Country}";
 
             UserResponse response = new UserResponse
             {
@@ -169,10 +164,10 @@ namespace Application.UseCases
                 Images = imagesResponse,
                 Location = new LocationResponse()
                 {
-                    Id = user.Location.LocationId,
-                    Latitude = user.Location.Latitude,
-                    Longitude = user.Location.Longitude,
-                    Address = address
+                    Id = location.Id,
+                    Latitude = location.Latitude,
+                    Longitude = location.Longitude,
+                    Address = location.Address
                 }
             };
 
