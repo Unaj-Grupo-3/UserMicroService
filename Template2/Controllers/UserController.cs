@@ -4,7 +4,11 @@ using Application.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using System.Globalization;
 using System.Security.Claims;
+using System.Text.Json;
 
 namespace Presentacion.Controllers
 {
@@ -19,14 +23,20 @@ namespace Presentacion.Controllers
         private readonly IAuthApiServices _authApiServices;
         private readonly IServerImagesApiServices _serverImagesApiServices;
         private readonly IGenderServices _genderServices;
+        private readonly IValidateLocationServices _validateLocationServices;
+        private readonly ILocationServices _locationServices;
+        private readonly ILocationApiServices _locationApiServices;
 
         public UserController(IServerImagesApiServices imgbbApiServices,
                               IUserServices userServices, 
-                              IValidateUserServices validateServices, 
-                              IImageServices imageServices, 
-                              IValidateImageServices validateImageServices, 
+                              IValidateUserServices validateServices,
+                              IImageServices imageServices,
+                              IValidateImageServices validateImageServices,
                               IAuthApiServices authApiServices,
-                              IGenderServices genderServices)
+                              IGenderServices genderServices,
+                              IValidateLocationServices validateLocationServices,
+                              ILocationServices locationServices,
+                              ILocationApiServices locationApiServices)
         {
             _userServices = userServices;
             _validateServices = validateServices;
@@ -35,6 +45,9 @@ namespace Presentacion.Controllers
             _authApiServices = authApiServices;
             _serverImagesApiServices = imgbbApiServices;
             _genderServices = genderServices;
+            _validateLocationServices = validateLocationServices;
+            _locationServices = locationServices;
+            _locationApiServices = locationApiServices;
         }
 
         [HttpGet("me")]
@@ -130,7 +143,25 @@ namespace Presentacion.Controllers
         {
             try
             {
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                Guid authId = Guid.Parse(identity.Claims.FirstOrDefault(x => x.Type == "AuthId").Value);
+                int userId = int.Parse(identity.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
+
+                var getUserById = await _userServices.GetUserById(userId);
+
+                if (getUserById != null)
+                {
+                    return new JsonResult(new { Message = "Ya estas registrado con esta cuenta!"}) { StatusCode = 400 };
+                }
+
                 var diccio = _validateServices.Validate(req, false).Result;
+
+                if (!diccio.ElementAt(0).Key)
+                {
+                    var errores = diccio.ElementAt(0).Value;
+                    return new JsonResult(new { Message = "Existen errores en la petición.", Response = errores }) { StatusCode = 400 };
+
+                }
 
                 if (req.Gender == null)
                 {
@@ -144,23 +175,46 @@ namespace Presentacion.Controllers
                     return new JsonResult(new { Message = $"No existe un genero con el id {req.Gender.Value}" }) { StatusCode = 404 };
                 }
 
-                if (diccio.ElementAt(0).Key)
+
+                int locationId;
+                // Con o sin coordenadas?
+                // Validar si se ingreso correctamente
+                if (!_validateLocationServices.ValidateLocation(req.Location)) //Si no se ingreso nada
                 {
-                    var identity = HttpContext.User.Identity as ClaimsIdentity;
-
-                    Guid authId = Guid.Parse(identity.Claims.FirstOrDefault(x => x.Type == "AuthId").Value);
-
-                    int userId = int.Parse(identity.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
-
-                    var response = await _userServices.AddUser(req, authId, userId);
-
-                    return new JsonResult(new { Message = "Se ha creado el usuario exitosamente.", Response = response }) { StatusCode = 201 };
+                    return new JsonResult(new { Message = $"Ingrese una ubicación valida" }) { StatusCode = 400 };
                 }
+                else if (_validateLocationServices.GenerateLocation()) // Si solo se ingreso la ciudad
+                {
+                    //Ya existe la ciudad?
+                    LocationResponse locationByCity = await _locationServices.GetLocationByCity(req.Location.City);
+                    if (locationByCity == null) // No existe esa ciudad
+                    {
+                        LocationReq locationJson = await _locationApiServices.GetLocation(req.Location.City);
+                        LocationResponse locationCreated = await _locationServices.AddLocation(locationJson);
+                        locationId = locationCreated.Id;
+                    }
+                    else // Existe la ciudad
+                    {
+                        locationId = locationByCity.Id;
+                    }
+                } //Si se ingresaron todos los datos
                 else
                 {
-                    var errores = diccio.ElementAt(0).Value;
-                    return new JsonResult(new { Message = "Existen errores en la petición.", Response = errores }) { StatusCode = 400 };
+                    // Busco por coordenada
+                    LocationResponse locationByCoords = await _locationServices.GetLocationByCoords(req.Location.Latitude.Value,req.Location.Longitude.Value);
+                    if (locationByCoords == null) // No existe esa coordenada
+                    {
+                        LocationResponse locationCreated = await _locationServices.AddLocation(req.Location);
+                        locationId = locationCreated.Id;
+                    }
+                    else // Existe la ciudad
+                    {
+                        locationId = locationByCoords.Id;
+                    }
                 }
+
+                var response = await _userServices.AddUser(req, authId, userId, locationId);
+                return new JsonResult(new { Message = "Se ha creado el usuario exitosamente.", Response = response }) { StatusCode = 201 };
 
             }
             catch (Microsoft.Data.SqlClient.SqlException)
@@ -242,47 +296,75 @@ namespace Presentacion.Controllers
                     }
                 }
 
-                UserReq userReq = new UserReq()
-                {
-                    Name = req.Name,
-                    LastName = req.LastName,
-                    Birthday = req.Birthday,
-                    Gender = req.Gender,
-                    Description = req.Description
-                };
+                var diccio = _validateServices.Validate(req, true).Result;
 
-                var diccio = _validateServices.Validate(userReq, true).Result;
-
-                var algo = diccio.ElementAt(0).Key;
-
-                if (diccio.ElementAt(0).Key)
-                {
-                    IList<ImageResponse> imagesUpdate = new List<ImageResponse>();
-
-                    if (req.Images != null && req.Images.Count != 0)
-                    {
-                        if (!await _validateImageServices.ValidateImages(req.Images, userId))
-                        {
-                            return new JsonResult(new { Message = "Error en la carga de fotos", Response = _validateImageServices.GetErrors() }) { StatusCode = 200 };
-                        }
-
-                        imagesUpdate = await _imageServices.UpdateImages(userId, req.Images);
-                    }
-
-                    var response = await _userServices.UpdateUser(userId, req);
-
-                    if (imagesUpdate.Count > 0)
-                    {
-                        response.Images = imagesUpdate;
-                    }
-
-                    return new JsonResult(new { Message = "Se ha actualizado el usuario exitosamente.", Response = response }) { StatusCode = 200 };
-                }
-                else
+                if (!diccio.ElementAt(0).Key)
                 {
                     var errores = diccio.ElementAt(0).Value;
                     return new JsonResult(new { Message = "Existen errores en la petición.", Response = errores }) { StatusCode = 400 };
                 }
+
+                int locationId = userExist.Location.Id;
+                if (req.Location != null)
+                {
+                    // Con o sin coordenadas?
+                    // Validar si se ingreso correctamente
+                    if (!_validateLocationServices.ValidateLocation(req.Location)) //Si no se ingreso nada
+                    {
+                        return new JsonResult(new { Message = $"Ingrese una ubicación valida" }) { StatusCode = 400 };
+                    }
+                    else if (_validateLocationServices.GenerateLocation()) // Si solo se ingreso la ciudad
+                    {
+                        //Ya existe la ciudad?
+                        LocationResponse locationByCity = await _locationServices.GetLocationByCity(req.Location.City);
+                        if (locationByCity == null) // No existe esa ciudad
+                        {
+                            LocationReq locationJson = await _locationApiServices.GetLocation(req.Location.City);
+                            LocationResponse locationCreated = await _locationServices.AddLocation(locationJson);
+                            locationId = locationCreated.Id;
+                        }
+                        else // Existe la ciudad
+                        {
+                            locationId = locationByCity.Id;
+                        }
+                    } //Si se ingresaron todos los datos
+                    else
+                    {
+                        // Busco por coordenada
+                        LocationResponse locationByCoords = await _locationServices.GetLocationByCoords(req.Location.Latitude.Value, req.Location.Longitude.Value);
+                        if (locationByCoords == null) // No existe esa coordenada
+                        {
+                            LocationResponse locationCreated = await _locationServices.AddLocation(req.Location);
+                            locationId = locationCreated.Id;
+                        }
+                        else // Existe la ciudad
+                        {
+                            locationId = locationByCoords.Id;
+                        }
+                    }
+                }
+
+                IList<ImageResponse> imagesUpdate = new List<ImageResponse>();
+
+                if (req.Images != null && req.Images.Count != 0)
+                {
+                    if (!await _validateImageServices.ValidateImages(req.Images, userId))
+                    {
+                        return new JsonResult(new { Message = "Error en la carga de fotos", Response = _validateImageServices.GetErrors() }) { StatusCode = 200 };
+                    }
+
+                    imagesUpdate = await _imageServices.UpdateImages(userId, req.Images);
+                }
+
+                var response = await _userServices.UpdateUser(userId, req, locationId);
+
+                if (imagesUpdate.Count > 0)
+                {
+                    response.Images = imagesUpdate;
+                }
+
+                return new JsonResult(new { Message = "Se ha actualizado el usuario exitosamente.", Response = response }) { StatusCode = 200 };
+
             }
             catch (Exception)
             {

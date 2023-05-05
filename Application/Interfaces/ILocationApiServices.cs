@@ -1,10 +1,11 @@
+using Application.Models;
 using System.Text.Json;
 
 namespace Application.Interfaces
 {
     public interface ILocationApiServices
     {
-        Task<string> GetLocation(string req);
+        Task<LocationReq> GetLocation(string city);
 
         string GetMessage();
 

@@ -1,7 +1,9 @@
 ﻿using Application.Interfaces;
+using Application.Models;
 using Application.UseCases;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 
 namespace Presentacion.Controllers
 {
@@ -16,18 +18,14 @@ namespace Presentacion.Controllers
             _service = service;
         }
 
-        [HttpGet("{location}")]
-        public async Task<IActionResult> GetLocation(string location)
+        [HttpGet]
+        public async Task<IActionResult> GetLocation([FromQuery]string location)
         {
             try
             {
-                var response = await _service.GetLocation(location);
-                if (response == null)
-                {
-                    return NotFound();
-                }
+                var jsonAddress = await _service.GetLocation(location);
 
-                return new JsonResult(response);
+                return Ok(jsonAddress);
             }
             catch (Microsoft.Data.SqlClient.SqlException)
             {

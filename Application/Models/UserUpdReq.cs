@@ -9,5 +9,6 @@ namespace Application.Models
         public string? Description { get; set; }
         public int? Gender { get; set; }
         public IList<int>? Images { get; set; }
+        public LocationReq? Location { get; set; }
     }
 }

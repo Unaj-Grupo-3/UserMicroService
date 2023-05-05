@@ -1,8 +1,9 @@
 
 using Application.Interfaces;
 using Application.Models;
-using System.Net.Http.Json;
+using System.Globalization;
 using System.Text.Json;
+using static Dropbox.Api.Sharing.ListFileMembersIndividualResult;
 
 namespace Application.UseCases
 {
@@ -24,26 +25,45 @@ namespace Application.UseCases
             _httpClient = new HttpClient(handler);
         }
 
-        public async Task<string> GetLocation(string req)
+        public async Task<LocationReq> GetLocation(string cityReq)
         {
             try
             {
-                string content = _url + req + "&key=" + _key;
+                string content = _url + cityReq + "&key=" + _key;
                 var responseApi = await _httpClient.GetAsync(content);
 
                 var responseContent = await responseApi.Content.ReadAsStringAsync();
                 var responseObject = JsonDocument.Parse(responseContent).RootElement;
-                //_message = responseObject.GetProperty("message").GetString();
-                //_response = responseObject.GetProperty("response").ToString();
-                //_statusCode = (int)responseApi.StatusCode;
+  
+                var results = responseObject.ToString();
 
-                return responseObject.ToString();
+                var jsonResponse = JsonDocument.Parse(results).RootElement.GetProperty("results")[0];
+
+                var address = jsonResponse.GetProperty("formatted_address").ToString();
+                string[] parts = address.Split(',');
+                string city = parts[0].Trim();
+                string province = parts.Length == 4 ? parts[2].Replace("Province", "").Trim() : parts[1].Replace("Province", "").Trim();
+                string country = parts[parts.Length - 1].Trim();
+
+                var latitude = double.Parse(jsonResponse.GetProperty("geometry").GetProperty("location").GetProperty("lat").ToString(), CultureInfo.InvariantCulture);
+                var longitude = double.Parse(jsonResponse.GetProperty("geometry").GetProperty("location").GetProperty("lng").ToString(), CultureInfo.InvariantCulture);
+
+
+                return new LocationReq()
+                {
+                    Longitude = longitude,
+                    Latitude = latitude,
+                    Country = country,
+                    City = city,
+                    Province = province,
+                };
+
             }
-            catch (System.Net.Http.HttpRequestException ex)
+            catch (Exception ex)
             {
-                _message = "Error en el microservicio de autenticación";
-                _statusCode = 500; 
-                return "";
+                _message = "Error en la llamada a la api de Google";
+                _statusCode = 500;
+                return null;
             }
         }
 
@@ -66,5 +86,7 @@ namespace Application.UseCases
         {
             return _statusCode;
         }
+
+
     }
 }

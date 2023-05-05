@@ -17,7 +17,9 @@ namespace Infrastructure.Queries
         public async Task<List<User>> GetAllUserByIds(List<int> userIds)
         {
             List<User> users = await _context.Users.Include(u => u.Images.OrderBy(x => x.Order))
-                                                         .Where(u => userIds.Contains(u.UserId)).ToListAsync();
+                                                   .Include(u => u.Location)
+                                                   .Include(u => u.Gender)
+                                                   .Where(u => userIds.Contains(u.UserId)).ToListAsync();
 
             return users;
         }
@@ -26,15 +28,20 @@ namespace Infrastructure.Queries
         {
             if (userFirstName == null)
             {
-                var users = await _context.Users.Include(x => x.Images.OrderBy(x => x.Order)).ToListAsync();
+                var users = await _context.Users.Include(x => x.Images.OrderBy(x => x.Order))
+                                                .Include(u => u.Location)
+                                                .Include(u => u.Gender)
+                                                .ToListAsync();
 
                 return users;
             }
             else
             {
                 var users = await _context.Users.Include(x => x.Images.OrderBy(x => x.Order))
-                                                 .Where(o => o.Name.ToLower().IndexOf(userFirstName.ToLower()) >= 0)
-                                                 .ToListAsync();
+                                                .Include(u => u.Location)
+                                                .Include(u => u.Gender)
+                                                .Where(o => o.Name.ToLower().IndexOf(userFirstName.ToLower()) >= 0)
+                                                .ToListAsync();
 
                 return users;
             }
@@ -42,14 +49,20 @@ namespace Infrastructure.Queries
 
         public async Task<User> GetUserByAuthId(Guid authId)
         {
-            User user = await _context.Users.Include(x => x.Images.OrderBy(x => x.Order)).FirstOrDefaultAsync(x => x.AuthId == authId);
+            User user = await _context.Users.Include(x => x.Images.OrderBy(x => x.Order))
+                                            .Include(u => u.Location)
+                                            .Include(u => u.Gender)
+                                            .FirstOrDefaultAsync(x => x.AuthId == authId);
 
             return user;
         }
 
         public async Task<User> GetUserById(int userId)
         {
-            User user = await _context.Users.Include(x => x.Images.OrderBy(x => x.Order)).FirstOrDefaultAsync(x => x.UserId == userId);
+            User user = await _context.Users.Include(x => x.Images.OrderBy(x => x.Order))
+                                            .Include(u => u.Location)
+                                            .Include(u => u.Gender)
+                                            .FirstOrDefaultAsync(x => x.UserId == userId);
 
             return user;
         }
@@ -57,7 +70,9 @@ namespace Infrastructure.Queries
         public async Task<List<User>> GetUserByList()
         {
             var users = await _context.Users.Include(x => x.Images.OrderBy(x => x.Order))
-                                                 .ToListAsync();
+                                            .Include(u => u.Location)
+                                            .Include(u => u.Gender)
+                                            .ToListAsync();
 
             return users;
         }

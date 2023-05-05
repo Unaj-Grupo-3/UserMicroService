@@ -1,4 +1,6 @@
 ﻿
+using Domain.Entities;
+
 namespace Application.Models
 {
     public class UserReq
@@ -8,5 +10,6 @@ namespace Application.Models
         public DateTime? Birthday { get; set; }
         public string? Description { get; set; }
         public int? Gender { get; set; }
+        public LocationReq Location { get; set; }
     }
 }

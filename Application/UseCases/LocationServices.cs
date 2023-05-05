@@ -1,6 +1,7 @@
 ﻿
 using Application.Interfaces;
 using Application.Models;
+using Domain.Entities;
 
 namespace Application.UseCases
 {
@@ -16,19 +17,71 @@ namespace Application.UseCases
         }
 
 
-        public Task<LocationResponse> AddLocation(LocationReq req)
+        public async Task<LocationResponse> AddLocation(LocationReq req)
         {
-            throw new NotImplementedException();
+            Location location = LocationReqToLocation(req);
+
+            Location create = await _commands.InsertLocation(location);
+
+            return LocationToLocationResponse(create);
+
         }
 
-        public Task<LocationResponse> UpdateLocation(LocationReq req)
+        public async Task<LocationResponse> GetLocationByCity(string city)
         {
-            throw new NotImplementedException();
+            Location locationByCity = await _queries.GetLocationByAddress(city);
+
+            if (locationByCity == null)
+            {
+                return null;
+            }
+
+            return LocationToLocationResponse(locationByCity);
         }
 
-        public Task<bool> ValidateLocation(LocationReq req, string address)
+        public async Task<LocationResponse> GetLocationByCoords(double latitude, double longitude)
         {
-            throw new NotImplementedException();
+            Location locationByCoords = await _queries.GetLocationByCoords(latitude, longitude);
+
+            if (locationByCoords == null)
+            {
+                return null;
+            }
+
+            return LocationToLocationResponse(locationByCoords);
+        }
+
+        public async Task<LocationResponse> UpdateLocation(LocationReq req)
+        {
+            Location location = LocationReqToLocation(req);
+
+            Location updated = await _commands.UpdateLocation(location);
+
+            return LocationToLocationResponse(updated);
+        }
+
+        private Location LocationReqToLocation(LocationReq req)
+        {
+
+            return new Location
+            {
+                Latitude = req.Latitude.Value,
+                Longitude = req.Longitude.Value,
+                City = req.City,
+                Province = req.Province,
+                Country = req.Country,
+            };
+        }
+
+        private LocationResponse LocationToLocationResponse(Location location)
+        {
+            return new LocationResponse
+            {
+                Id = location.LocationId,
+                Latitude = location.Latitude,
+                Longitude = location.Longitude,
+                Address = $"{location.City}, {location.Province}, {location.Country}"
+            };
         }
     }
 }
