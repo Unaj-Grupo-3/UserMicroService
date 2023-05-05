@@ -90,6 +90,7 @@ builder.Services.AddTransient<IAuthApiServices, AuthApiServices>();
 builder.Services.AddTransient<IValidateLocationServices, ValidateLocationServices>();
 builder.Services.AddTransient<ILocationCommands, LocationCommands>();
 builder.Services.AddTransient<ILocationQueries, LocationQueries>();
+builder.Services.AddTransient<ILocationApiServices, LocationApiServices>();
 builder.Services.AddTransient<ILocationServices, LocationServices>();
 
 var app = builder.Build();

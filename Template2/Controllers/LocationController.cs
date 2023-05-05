@@ -9,9 +9,9 @@ namespace Presentacion.Controllers
     [ApiController]
     public class LocationController : ControllerBase
     {
-        private readonly ILocationServices _service;
+        private readonly ILocationApiServices _service;
 
-        public LocationController(ILocationServices service)
+        public LocationController(ILocationApiServices service)
         {
             _service = service;
         }
