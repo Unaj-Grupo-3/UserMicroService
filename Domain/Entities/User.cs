@@ -12,6 +12,5 @@
         public Location? Location { get; set; }
         public IList<Image>? Images { get; set; }
         public Gender Gender { get; set; }
-        public int UserStatus { get; set; } //
     }
 }

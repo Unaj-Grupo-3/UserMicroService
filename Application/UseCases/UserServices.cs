@@ -26,7 +26,6 @@ namespace Application.UseCases
                 Birthday = req.Birthday.Value,
                 Description = req.Description,
                 GenderId = req.Gender.Value,
-                UserStatus = 0,
                 LocationId = locationId,
             };
 

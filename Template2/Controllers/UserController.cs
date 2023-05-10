@@ -71,9 +71,9 @@ namespace Presentacion.Controllers
             }
         }
 
-        [HttpGet("{UserId}")]
+        [HttpGet("me")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> GetUserById(int UserId)
+        public async Task<IActionResult> GetUserById()
         {
             try
             {
