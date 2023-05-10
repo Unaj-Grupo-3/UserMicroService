@@ -7,7 +7,7 @@ using System.Globalization;
 
 namespace Presentacion.Controllers
 {
-    [Route("api/v1/&[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class LocationController : ControllerBase
     {

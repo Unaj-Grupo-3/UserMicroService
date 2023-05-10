@@ -54,7 +54,6 @@ namespace Infrastructure.Migrations
                     Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     LocationId = table.Column<int>(type: "int", nullable: true),
                     GenderId = table.Column<int>(type: "int", nullable: false),
-                    AuthId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserStatus = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>

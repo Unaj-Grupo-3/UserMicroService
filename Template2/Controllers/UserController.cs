@@ -49,32 +49,8 @@ namespace Presentacion.Controllers
             _locationServices = locationServices;
             _locationApiServices = locationApiServices;
         }
-
-        [HttpGet("me")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> GetUserById()
-        {
-            try
-            {
-                var identity = HttpContext.User.Identity as ClaimsIdentity;
-                int userId = int.Parse(identity.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
-
-                UserResponse response = await _userServices.GetUserById(userId);
-
-                if (response == null)
-                {
-                    return NotFound();
-                }
-
-                return new JsonResult(response);
-            }
-            catch (Microsoft.Data.SqlClient.SqlException)
-            {
-                return new JsonResult(new { Message = "Se ha producido un error interno en el servidor." }) { StatusCode = 500 };
-            }
-        }
-
-        [HttpGet("All")]
+        
+        [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
             try
@@ -95,7 +71,37 @@ namespace Presentacion.Controllers
             }
         }
 
-        [HttpGet("userByIds/ids")]
+        [HttpGet("me")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetUserById()
+        {
+            try
+            {
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                int userId = int.Parse(identity.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
+
+                //if (userId != UserId) 
+                //{
+                //    return new JsonResult(new { Message = "El usuario ingresado no coincide con el usuario autenticado" }) { StatusCode = 400 };
+                //}
+
+                UserResponse response = await _userServices.GetUserById(userId);
+
+                if (response == null)
+                {
+                    return NotFound();
+                }
+
+                return new JsonResult(response);
+            }
+            catch (Microsoft.Data.SqlClient.SqlException)
+            {
+                return new JsonResult(new { Message = "Se ha producido un error interno en el servidor." }) { StatusCode = 500 };
+            }
+        }
+
+
+        [HttpGet("userByIds")]
         public async Task<IActionResult> GetAllListUsers([FromQuery] List<int> usersId)
         {
             try
@@ -116,27 +122,6 @@ namespace Presentacion.Controllers
             }
         }
 
-        // Usado en el micro de auth para generar el token. Si CreateUser se use en el MICRO-AUTH no hace falta tenerlo.
-        [HttpGet("Auth/{authId}")]
-        public async Task<IActionResult> GetUserByAuthId(Guid authId)
-        {
-            try
-            {
-                UserResponse response = await _userServices.GetUserByAuthId(authId);
-
-                if (response == null)
-                {
-                    return NotFound();
-                }
-
-                return new JsonResult(new { Message = "Encontrado.", Response = response });
-            }
-            catch (Microsoft.Data.SqlClient.SqlException)
-            {
-                return new JsonResult(new { Message = "Se ha producido un error interno en el servidor." }) { StatusCode = 500 };
-            }
-        }
-
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> CreateUser(UserReq req)
@@ -144,7 +129,6 @@ namespace Presentacion.Controllers
             try
             {
                 var identity = HttpContext.User.Identity as ClaimsIdentity;
-                Guid authId = Guid.Parse(identity.Claims.FirstOrDefault(x => x.Type == "AuthId").Value);
                 int userId = int.Parse(identity.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
 
                 var getUserById = await _userServices.GetUserById(userId);
@@ -213,7 +197,7 @@ namespace Presentacion.Controllers
                     }
                 }
 
-                var response = await _userServices.AddUser(req, authId, userId, locationId);
+                var response = await _userServices.AddUser(req, userId, locationId);
                 return new JsonResult(new { Message = "Se ha creado el usuario exitosamente.", Response = response }) { StatusCode = 201 };
 
             }
@@ -222,53 +206,7 @@ namespace Presentacion.Controllers
                 return new JsonResult(new { Message = "Se ha producido un error interno en el servidor." }) { StatusCode = 500 };
             }
 
-        }
-
-        [HttpPost("Photo")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> AddImage(IFormFile file)
-        {
-            try
-            {
-                var identity = HttpContext.User.Identity as ClaimsIdentity;
-
-                int userId = int.Parse(identity.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
-
-                var userExist = await _userServices.GetUserById(userId);
-
-                if (userExist == null)
-                {
-                    return new JsonResult(new { Message = $"No existe el usuario con el id {userId}" }) { StatusCode = 404 };
-                }
-
-                if (!await _validateImageServices.Validate(file, userId))
-                {
-                    return new JsonResult(_validateImageServices.GetErrors()) { StatusCode = 400 };
-                }
-
-                bool uploadIsValid = await _serverImagesApiServices.UploadImage(file, userId);
-
-                if (!uploadIsValid)
-                {
-                    return new JsonResult(new { Message = _serverImagesApiServices.GetMessage(), Response = _serverImagesApiServices.GetResponse() }) { StatusCode = _serverImagesApiServices.GetStatusCode() };
-
-                }
-
-                var url = _serverImagesApiServices.GetResponse().RootElement.GetProperty("link").ToString();
-
-                await _imageServices.UploadImage(userId, url);
-
-                var userResponse = await _userServices.GetUserById(userId);
-
-                return new JsonResult(new { Message = "La foto se ha subido correctamente", Response = userResponse }) { StatusCode = 201 };
-
-
-            }
-            catch (Exception)
-            {
-                return new JsonResult(new { Message = "Se ha producido un error interno en el servidor." }) { StatusCode = 500 };
-            }
-        }
+        }        
 
         [HttpPut]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

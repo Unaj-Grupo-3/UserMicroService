@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ExpresoDbContext))]
-    [Migration("20230504192402_userId")]
-    partial class userId
+    [Migration("20230510224953_QuitUserStatus")]
+    partial class QuitUserStatus
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -147,9 +147,6 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("UserStatus")
-                        .HasColumnType("int");
 
                     b.HasKey("UserId");
 

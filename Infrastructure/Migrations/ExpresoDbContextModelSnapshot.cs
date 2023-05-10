@@ -121,9 +121,6 @@ namespace Infrastructure.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("AuthId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("Birthday")
                         .HasColumnType("date");
 
@@ -147,9 +144,6 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("UserStatus")
-                        .HasColumnType("int");
 
                     b.HasKey("UserId");
 
