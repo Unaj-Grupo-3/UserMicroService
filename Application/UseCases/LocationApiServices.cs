@@ -16,13 +16,11 @@ namespace Application.UseCases
         private string _key;
         private HttpClient _httpClient;
 
-        public LocationApiServices()
+        public LocationApiServices(HttpClient httpClient)
         {
             _url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=";
             _key = "AIzaSyBY5G5xHHpWM8DlcK6Xqh4WqIHmkqvSDXc";
-            var handler = new HttpClientHandler();
-            handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
-            _httpClient = new HttpClient(handler);
+            _httpClient = httpClient;
         }
 
         public async Task<LocationReq> GetLocation(string cityReq)

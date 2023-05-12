@@ -71,27 +71,30 @@ var connectionString = builder.Configuration["ConnectionString"];
 
 builder.Services.AddDbContext<ExpresoDbContext>(options => options.UseSqlServer(connectionString));
 
-builder.Services.AddTransient<IUserCommands, UserCommands>();
-builder.Services.AddTransient<IUserServices, UserServices>();
-builder.Services.AddTransient<IUserQueries, UserQueries>();
+builder.Services.AddScoped<IUserCommands, UserCommands>();
+builder.Services.AddScoped<IUserServices, UserServices>();
+builder.Services.AddScoped<IUserQueries, UserQueries>();
 
-builder.Services.AddTransient<IGenderServices, GenderServices>();
-builder.Services.AddTransient<IGenderQueries, GenderQueries>();
+builder.Services.AddScoped<IGenderServices, GenderServices>();
+builder.Services.AddScoped<IGenderQueries, GenderQueries>();
 
-builder.Services.AddTransient<IEncryptServices, EncryptServices>();
-builder.Services.AddTransient<IValidateUserServices, ValidateUserServices>();
-builder.Services.AddTransient<IImageCommands, ImageCommands>();
-builder.Services.AddTransient<IImageQueries, ImageQueries>();
-builder.Services.AddTransient<IImageServices, ImageServices>();
-builder.Services.AddTransient<IValidateImageServices, ValidateImageServices>();
-builder.Services.AddTransient<IServerImagesApiServices, ServerImagesApiServices>();
-builder.Services.AddTransient<IAuthApiServices, AuthApiServices>();
+builder.Services.AddScoped<IValidateUserServices, ValidateUserServices>();
+builder.Services.AddScoped<IImageCommands, ImageCommands>();
+builder.Services.AddScoped<IImageQueries, ImageQueries>();
+builder.Services.AddScoped<IImageServices, ImageServices>();
+builder.Services.AddScoped<IValidateImageServices, ValidateImageServices>();
+builder.Services.AddHttpClient<IServerImagesApiServices, ServerImagesApiServices>()
+       .Services.AddScoped<IServerImagesApiServices, ServerImagesApiServices>();
 
-builder.Services.AddTransient<IValidateLocationServices, ValidateLocationServices>();
-builder.Services.AddTransient<ILocationCommands, LocationCommands>();
-builder.Services.AddTransient<ILocationQueries, LocationQueries>();
-builder.Services.AddTransient<ILocationApiServices, LocationApiServices>();
-builder.Services.AddTransient<ILocationServices, LocationServices>();
+
+builder.Services.AddScoped<IValidateLocationServices, ValidateLocationServices>();
+builder.Services.AddScoped<ILocationCommands, LocationCommands>();
+builder.Services.AddScoped<ILocationQueries, LocationQueries>();
+builder.Services.AddScoped<ILocationServices, LocationServices>();
+
+
+builder.Services.AddHttpClient<ILocationApiServices, LocationApiServices>()
+       .Services.AddScoped<ILocationApiServices, LocationApiServices>();
 
 var app = builder.Build();
 
