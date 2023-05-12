@@ -20,7 +20,6 @@ namespace Presentacion.Controllers
         private readonly IValidateUserServices _validateServices;
         private readonly IImageServices _imageServices;
         private readonly IValidateImageServices _validateImageServices;
-        private readonly IAuthApiServices _authApiServices;
         private readonly IServerImagesApiServices _serverImagesApiServices;
         private readonly IGenderServices _genderServices;
         private readonly IValidateLocationServices _validateLocationServices;
@@ -32,7 +31,6 @@ namespace Presentacion.Controllers
                               IValidateUserServices validateServices,
                               IImageServices imageServices,
                               IValidateImageServices validateImageServices,
-                              IAuthApiServices authApiServices,
                               IGenderServices genderServices,
                               IValidateLocationServices validateLocationServices,
                               ILocationServices locationServices,
@@ -42,7 +40,6 @@ namespace Presentacion.Controllers
             _validateServices = validateServices;
             _imageServices = imageServices;
             _validateImageServices = validateImageServices;
-            _authApiServices = authApiServices;
             _serverImagesApiServices = imgbbApiServices;
             _genderServices = genderServices;
             _validateLocationServices = validateLocationServices;
@@ -80,16 +77,11 @@ namespace Presentacion.Controllers
                 var identity = HttpContext.User.Identity as ClaimsIdentity;
                 int userId = int.Parse(identity.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
 
-                //if (userId != UserId) 
-                //{
-                //    return new JsonResult(new { Message = "El usuario ingresado no coincide con el usuario autenticado" }) { StatusCode = 400 };
-                //}
-
                 UserResponse response = await _userServices.GetUserById(userId);
 
                 if (response == null)
                 {
-                    return NotFound();
+                    return new JsonResult(new {Message = "No tiene un perfil creado"}) { StatusCode = 404};
                 }
 
                 return new JsonResult(response);

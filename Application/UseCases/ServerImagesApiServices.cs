@@ -18,11 +18,11 @@ namespace Application.UseCases
         private readonly string _apiKey;
         private readonly string _url;
 
-        public ServerImagesApiServices()
+        public ServerImagesApiServices(HttpClient httpclient)
         {
             _url = "https://api.imgbb.com/1/upload?key=";
             _apiKey = "22816cb3b8a8fc4f0a42ecfa3ff52b78";
-            _httpClient = new HttpClient();
+            _httpClient = httpclient;
         }
 
         public async Task<bool> UploadImage(IFormFile file, int userId)
