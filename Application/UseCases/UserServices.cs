@@ -97,7 +97,7 @@ namespace Application.UseCases
             return userResponse;
         }
 
-        public async Task<List<UserResponse>> GetAllUserByIds(List<int> userIds)
+        public async Task<List<UserResponse>> GetAllUsersFullByIds(List<int> userIds)
         {
             List<UserResponse> listUserResponse = new List<UserResponse>();
             var listUser = await _queries.GetAllUserByIds(userIds);
@@ -115,6 +115,27 @@ namespace Application.UseCases
             else
             {
                 return new List<UserResponse>();
+            }
+        }
+
+        public async Task<List<UserViewResponse>> GetAllUsersByIds(List<int> userIds)
+        {
+            List<UserViewResponse> listUserResponse = new List<UserViewResponse>();
+            var listUser = await _queries.GetAllUserByIds(userIds);
+
+            if (listUser.Any())
+            {
+                foreach (var user in listUser)
+                {
+                    UserViewResponse response = MapperUserToUserViewResponse(user);
+
+                    listUserResponse.Add(response);
+                }
+                return listUserResponse;
+            }
+            else
+            {
+                return new List<UserViewResponse>();
             }
         }
 
@@ -168,6 +189,28 @@ namespace Application.UseCases
                     Longitude = location.Longitude,
                     Address = location.Address
                 }
+            };
+
+            return response;
+        }
+
+        private UserViewResponse MapperUserToUserViewResponse(User user)
+        {
+            string imageResponse = "";
+          
+            if (user.Images.Any())
+            {
+                var image = user.Images.OrderBy(i => i.Order).FirstOrDefault();
+                imageResponse = image.Url;
+            }    
+
+            UserViewResponse response = new UserViewResponse
+            {
+                UserId = user.UserId,
+                Name = user.Name,
+                LastName = user.LastName,
+                Gender = user.Gender.Description,
+                Image = imageResponse
             };
 
             return response;

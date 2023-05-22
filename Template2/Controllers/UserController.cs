@@ -68,44 +68,76 @@ namespace Presentacion.Controllers
             }
         }
 
-        [HttpGet("me")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> GetUserById()
+        //[HttpGet("me")]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //public async Task<IActionResult> GetUserById()
+        //{
+        //    try
+        //    {
+        //        var identity = HttpContext.User.Identity as ClaimsIdentity;
+        //        int userId = int.Parse(identity.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
+
+        //        UserResponse response = await _userServices.GetUserById(userId);
+
+        //        if (response == null)
+        //        {
+        //            return new JsonResult(new {Message = "No tiene un perfil creado"}) { StatusCode = 404};
+        //        }
+
+        //        return new JsonResult(response);
+        //    }
+        //    catch (Microsoft.Data.SqlClient.SqlException)
+        //    {
+        //        return new JsonResult(new { Message = "Se ha producido un error interno en el servidor." }) { StatusCode = 500 };
+        //    }
+        //}
+
+
+        [HttpGet("{fullResponse}")]
+        public async Task<IActionResult> GetAllListUsers([FromQuery] List<int> usersId, bool fullResponse)
         {
             try
             {
-                var identity = HttpContext.User.Identity as ClaimsIdentity;
-                int userId = int.Parse(identity.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
-
-                UserResponse response = await _userServices.GetUserById(userId);
-
-                if (response == null)
+                if(!usersId.Any())
                 {
-                    return new JsonResult(new {Message = "No tiene un perfil creado"}) { StatusCode = 404};
+                    var identity = HttpContext.User.Identity as ClaimsIdentity;
+                    int userId = 0;
+
+                    if (identity.Claims.Any())
+                    {
+                        userId = int.Parse(identity.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
+                    }
+
+                    UserResponse response = await _userServices.GetUserById(userId);
+
+                    if (response == null)
+                    {
+                        return new JsonResult(new { Message = "No tiene un perfil creado" }) { StatusCode = 404 };
+                    }
+
+                    return new JsonResult(response);
                 }
 
-                return new JsonResult(response);
-            }
-            catch (Microsoft.Data.SqlClient.SqlException)
-            {
-                return new JsonResult(new { Message = "Se ha producido un error interno en el servidor." }) { StatusCode = 500 };
-            }
-        }
-
-
-        [HttpGet("userByIds")]
-        public async Task<IActionResult> GetAllListUsers([FromQuery] List<int> usersId)
-        {
-            try
-            {
-                var users = await _userServices.GetAllUserByIds(usersId);
-
-                if (users == null)
+                if (fullResponse)
                 {
-                    return NotFound();
-                }
+                    var usersFull = await _userServices.GetAllUsersFullByIds(usersId);
+                    if (usersFull == null)
+                    {
+                        return NotFound();
+                    }
 
-                return new JsonResult(users);
+                    return new JsonResult(usersFull);
+                }
+                else
+                {
+                   var users = await _userServices.GetAllUsersByIds(usersId);
+                    if (users == null)
+                    {
+                        return NotFound();
+                    }
+
+                    return new JsonResult(users);
+                }
 
             }
             catch (Exception)
