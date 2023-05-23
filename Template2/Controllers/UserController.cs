@@ -9,6 +9,9 @@ using Newtonsoft.Json;
 using System.Globalization;
 using System.Security.Claims;
 using System.Text.Json;
+using Azure.Core;
+using Presentation.Authorization;
+using System.Security.Cryptography;
 
 namespace Presentacion.Controllers
 {
@@ -25,6 +28,7 @@ namespace Presentacion.Controllers
         private readonly IValidateLocationServices _validateLocationServices;
         private readonly ILocationServices _locationServices;
         private readonly ILocationApiServices _locationApiServices;
+        private readonly IConfiguration _configuration;
 
         public UserController(IServerImagesApiServices imgbbApiServices,
                               IUserServices userServices, 
@@ -34,7 +38,8 @@ namespace Presentacion.Controllers
                               IGenderServices genderServices,
                               IValidateLocationServices validateLocationServices,
                               ILocationServices locationServices,
-                              ILocationApiServices locationApiServices)
+                              ILocationApiServices locationApiServices,
+                              IConfiguration configuration)
         {
             _userServices = userServices;
             _validateServices = validateServices;
@@ -45,6 +50,7 @@ namespace Presentacion.Controllers
             _validateLocationServices = validateLocationServices;
             _locationServices = locationServices;
             _locationApiServices = locationApiServices;
+            _configuration = configuration;
         }
         
         [HttpGet]
@@ -94,19 +100,25 @@ namespace Presentacion.Controllers
 
 
         [HttpGet("{fullResponse}")]
+        [Authorize(AuthenticationSchemes = ApiKeySchemeOptions.Scheme)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetAllListUsers([FromQuery] List<int> usersId, bool fullResponse)
         {
             try
             {
-                if(!usersId.Any())
-                {
-                    var identity = HttpContext.User.Identity as ClaimsIdentity;
-                    int userId = 0;
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                var apikey = _configuration.GetSection("ApiKey").Get<string>();
+                var key = HttpContext.User.Identity.Name;
 
-                    if (identity.Claims.Any())
-                    {
-                        userId = int.Parse(identity.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
-                    }
+                if(key != null && key != apikey)
+                {
+                    return new JsonResult(new { Message = "No se puede acceder. La Key es inválida" }) { StatusCode = 401 };
+                }
+
+                //Lista vacia, ApiKey NO, JWT SI -> (getMyUser)
+                if(!usersId.Any() && HttpContext.User.Identity.Name == null && identity.Claims.Any())
+                {
+                    int userId = int.Parse(identity.Claims.FirstOrDefault(x => x.Type == "UserId").Value);             
 
                     UserResponse response = await _userServices.GetUserById(userId);
 
