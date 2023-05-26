@@ -9,6 +9,9 @@ using Newtonsoft.Json;
 using System.Globalization;
 using System.Security.Claims;
 using System.Text.Json;
+using Azure.Core;
+using Presentation.Authorization;
+using System.Security.Cryptography;
 
 namespace Presentacion.Controllers
 {
@@ -25,6 +28,7 @@ namespace Presentacion.Controllers
         private readonly IValidateLocationServices _validateLocationServices;
         private readonly ILocationServices _locationServices;
         private readonly ILocationApiServices _locationApiServices;
+        private readonly IConfiguration _configuration;
 
         public UserController(IServerImagesApiServices imgbbApiServices,
                               IUserServices userServices, 
@@ -34,7 +38,8 @@ namespace Presentacion.Controllers
                               IGenderServices genderServices,
                               IValidateLocationServices validateLocationServices,
                               ILocationServices locationServices,
-                              ILocationApiServices locationApiServices)
+                              ILocationApiServices locationApiServices,
+                              IConfiguration configuration)
         {
             _userServices = userServices;
             _validateServices = validateServices;
@@ -45,6 +50,7 @@ namespace Presentacion.Controllers
             _validateLocationServices = validateLocationServices;
             _locationServices = locationServices;
             _locationApiServices = locationApiServices;
+            _configuration = configuration;
         }
         
         [HttpGet]
@@ -68,44 +74,82 @@ namespace Presentacion.Controllers
             }
         }
 
-        [HttpGet("me")]
+        //[HttpGet("me")]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //public async Task<IActionResult> GetUserById()
+        //{
+        //    try
+        //    {
+        //        var identity = HttpContext.User.Identity as ClaimsIdentity;
+        //        int userId = int.Parse(identity.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
+
+        //        UserResponse response = await _userServices.GetUserById(userId);
+
+        //        if (response == null)
+        //        {
+        //            return new JsonResult(new {Message = "No tiene un perfil creado"}) { StatusCode = 404};
+        //        }
+
+        //        return new JsonResult(response);
+        //    }
+        //    catch (Microsoft.Data.SqlClient.SqlException)
+        //    {
+        //        return new JsonResult(new { Message = "Se ha producido un error interno en el servidor." }) { StatusCode = 500 };
+        //    }
+        //}
+
+
+        [HttpGet("{fullResponse}")]
+        [Authorize(AuthenticationSchemes = ApiKeySchemeOptions.Scheme)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> GetUserById()
+        public async Task<IActionResult> GetAllListUsers([FromQuery] List<int> usersId, bool fullResponse)
         {
             try
             {
                 var identity = HttpContext.User.Identity as ClaimsIdentity;
-                int userId = int.Parse(identity.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
+                var apikey = _configuration.GetSection("ApiKey").Get<string>();
+                var key = HttpContext.User.Identity.Name;
 
-                UserResponse response = await _userServices.GetUserById(userId);
-
-                if (response == null)
+                if(key != null && key != apikey)
                 {
-                    return new JsonResult(new {Message = "No tiene un perfil creado"}) { StatusCode = 404};
+                    return new JsonResult(new { Message = "No se puede acceder. La Key es inválida" }) { StatusCode = 401 };
                 }
 
-                return new JsonResult(response);
-            }
-            catch (Microsoft.Data.SqlClient.SqlException)
-            {
-                return new JsonResult(new { Message = "Se ha producido un error interno en el servidor." }) { StatusCode = 500 };
-            }
-        }
-
-
-        [HttpGet("userByIds")]
-        public async Task<IActionResult> GetAllListUsers([FromQuery] List<int> usersId)
-        {
-            try
-            {
-                var users = await _userServices.GetAllUserByIds(usersId);
-
-                if (users == null)
+                //Lista vacia, ApiKey NO, JWT SI -> (getMyUser)
+                if(!usersId.Any() && HttpContext.User.Identity.Name == null && identity.Claims.Any())
                 {
-                    return NotFound();
+                    int userId = int.Parse(identity.Claims.FirstOrDefault(x => x.Type == "UserId").Value);             
+
+                    UserResponse response = await _userServices.GetUserById(userId);
+
+                    if (response == null)
+                    {
+                        return new JsonResult(new { Message = "No tiene un perfil creado" }) { StatusCode = 404 };
+                    }
+
+                    return new JsonResult(response);
                 }
 
-                return new JsonResult(users);
+                if (fullResponse)
+                {
+                    var usersFull = await _userServices.GetAllUsersFullByIds(usersId);
+                    if (usersFull == null)
+                    {
+                        return NotFound();
+                    }
+
+                    return new JsonResult(usersFull);
+                }
+                else
+                {
+                   var users = await _userServices.GetAllUsersByIds(usersId);
+                    if (users == null)
+                    {
+                        return NotFound();
+                    }
+
+                    return new JsonResult(users);
+                }
 
             }
             catch (Exception)
