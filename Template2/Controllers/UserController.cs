@@ -54,10 +54,18 @@ namespace Presentacion.Controllers
         }
         
         [HttpGet]
+        [Authorize(AuthenticationSchemes = ApiKeySchemeOptions.Scheme)]
         public async Task<IActionResult> GetAllUsers()
         {
             try
             {
+                var apikey = _configuration.GetSection("ApiKey").Get<string>();
+                var key = HttpContext.User.Identity.Name;
+
+                if (key != null && key != apikey)
+                {
+                    return new JsonResult(new { Message = "No se puede acceder. La Key es inválida" }) { StatusCode = 401 };
+                }
                 var users = await _userServices.GetUserByList();
 
                 if (users == null)
