@@ -19,7 +19,7 @@ namespace Application.UseCases
         public LocationApiServices(HttpClient httpClient)
         {
             _url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=";
-            _key = "AIzaSyBY5G5xHHpWM8DlcK6Xqh4WqIHmkqvSDXc";
+            _key = "AIzaSyDpwWJzl2lrtKx7JyvzHRnaotvrYijX-HU";
             _httpClient = httpClient;
         }
 
