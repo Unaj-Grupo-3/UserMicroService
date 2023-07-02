@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Application.Models;
 using Domain.Entities;
 using Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
@@ -63,6 +64,21 @@ namespace Infrastructure.Queries
                                             .Include(u => u.Location)
                                             .Include(u => u.Gender)
                                             .ToListAsync();
+
+            return users;
+        }
+
+        public async Task<List<User>> GetUsersByFilters(List<int> gendersId)
+        {
+            var users = new List<User>();
+            if (!gendersId.Contains(-1))
+            {
+                users = await _context.Users.Include(x => x.Location).Where(x => gendersId.Contains(x.GenderId)).ToListAsync();
+            }
+            else
+            {
+                users = await _context.Users.Include(x => x.Location).ToListAsync();
+            }
 
             return users;
         }

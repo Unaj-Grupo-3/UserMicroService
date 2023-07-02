@@ -55,7 +55,7 @@ namespace Presentacion.Controllers
         
         [HttpGet]
         [Authorize(AuthenticationSchemes = ApiKeySchemeOptions.Scheme)]
-        public async Task<IActionResult> GetAllUsers()
+        public async Task<IActionResult> GetAllUsers([FromQuery]UserSuggestionRequest suggestion)
         {
             try
             {
@@ -66,6 +66,14 @@ namespace Presentacion.Controllers
                 {
                     return new JsonResult(new { Message = "No se puede acceder. La Key es inválida" }) { StatusCode = 401 };
                 }
+
+                if (suggestion.GendersId != null)
+                {
+                   var usersIds = await _userServices.GetUsersIdsByFilters(suggestion);
+                   
+                   return new JsonResult(usersIds);
+                }
+
                 var users = await _userServices.GetUserByList();
 
                 if (users == null)
@@ -82,29 +90,6 @@ namespace Presentacion.Controllers
             }
         }
 
-        //[HttpGet("me")]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        //public async Task<IActionResult> GetUserById()
-        //{
-        //    try
-        //    {
-        //        var identity = HttpContext.User.Identity as ClaimsIdentity;
-        //        int userId = int.Parse(identity.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
-
-        //        UserResponse response = await _userServices.GetUserById(userId);
-
-        //        if (response == null)
-        //        {
-        //            return new JsonResult(new {Message = "No tiene un perfil creado"}) { StatusCode = 404};
-        //        }
-
-        //        return new JsonResult(response);
-        //    }
-        //    catch (Microsoft.Data.SqlClient.SqlException)
-        //    {
-        //        return new JsonResult(new { Message = "Se ha producido un error interno en el servidor." }) { StatusCode = 500 };
-        //    }
-        //}
 
 
         [HttpGet("{fullResponse}")]
@@ -138,7 +123,7 @@ namespace Presentacion.Controllers
                     return new JsonResult(response);
                 }
 
-                if (fullResponse)
+                if(fullResponse)
                 {
                     var usersFull = await _userServices.GetAllUsersFullByIds(usersId);
                     if (usersFull == null)
@@ -158,7 +143,6 @@ namespace Presentacion.Controllers
 
                     return new JsonResult(users);
                 }
-
             }
             catch (Exception)
             {
