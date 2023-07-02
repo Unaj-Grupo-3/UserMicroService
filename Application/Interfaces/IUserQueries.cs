@@ -9,5 +9,6 @@ namespace Application.Interfaces
         Task<List<User>> GetByFirstName(string? userFirstName);
         Task<List<User>> GetUserByList();
         Task<List<User>> GetAllUserByIds(List<int> userIds);
+        Task<List<User>> GetUsersByFilters(List<int> gendersId);
     }
 }

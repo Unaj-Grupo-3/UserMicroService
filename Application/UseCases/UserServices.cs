@@ -139,6 +139,19 @@ namespace Application.UseCases
             }
         }
 
+        public async Task<List<int>> GetUsersIdsByFilters(UserSuggestionRequest filters)
+        {
+            var usersByGenderId = await _queries.GetUsersByFilters(filters.GendersId);
+
+            var usersByFilters = usersByGenderId.Where(x =>  Edad(x.Birthday) >= filters.MinEdad && Edad(x.Birthday) <= filters.MaxEdad && 
+                                                             CalculateDistance(filters.Longitude,x.Location.Longitude,filters.Latitude,x.Location.Latitude) <= (filters.Distance + 1))
+                                                        .ToList();
+
+            var usersIdsByFilters = usersByFilters.Select(x => x.UserId).ToList();
+
+            return usersIdsByFilters;
+        }
+
         private UserResponse MapperUserToUserResponse(User user)
         {
             List<ImageResponse> imagesResponse = new List<ImageResponse>();
@@ -214,6 +227,25 @@ namespace Application.UseCases
             };
 
             return response;
+        }
+
+
+        private int CalculateDistance(double longitude1, double longitude2, double latitude1, double latitude2)
+        {
+            double theta = longitude1 - longitude2;
+
+            double distance = 60 * 1.1515 * (180 / Math.PI) * Math.Acos(
+                 Math.Sin(latitude1 * (Math.PI / 180)) * Math.Sin(latitude2 * (Math.PI / 180)) +
+                 Math.Cos(latitude1 * (Math.PI / 180)) * Math.Cos(latitude2 * (Math.PI / 180)) * Math.Cos(theta * (Math.PI / 180))
+                );
+
+            return Convert.ToInt32(Math.Round(distance * 1.609344, 2));
+        }
+
+
+        private int Edad(DateTime date)
+        {
+            return DateTime.Today.AddTicks(-date.Ticks).Year - 1; ;
         }
     }
     

@@ -14,6 +14,8 @@ namespace Application.Interfaces
 
         Task<List<UserResponse>> GetUserByList();
 
+        Task<List<int>> GetUsersIdsByFilters(UserSuggestionRequest filters);
+
         Task<List<UserResponse>> GetAllUsersFullByIds(List<int> userIds);
 
         Task<List<UserViewResponse>> GetAllUsersByIds(List<int> userIds);
