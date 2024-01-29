@@ -4,7 +4,6 @@ using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 
 namespace Infrastructure.Commands
 {

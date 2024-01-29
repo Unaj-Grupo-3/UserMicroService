@@ -1,17 +1,11 @@
-﻿using Abp.Webhooks;
+﻿
 using Application.Interfaces;
 using Application.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using System.Globalization;
 using System.Security.Claims;
-using System.Text.Json;
-using Azure.Core;
 using Presentation.Authorization;
-using System.Security.Cryptography;
 
 namespace Presentacion.Controllers
 {
@@ -189,15 +183,14 @@ namespace Presentacion.Controllers
 
 
                 int locationId;
-                // Con o sin coordenadas?
-                // Validar si se ingreso correctamente
+
                 if (!_validateLocationServices.ValidateLocation(req.Location)) //Si no se ingreso nada
                 {
                     return new JsonResult(new { Message = $"Ingrese una ubicación valida" }) { StatusCode = 400 };
                 }
                 else if (_validateLocationServices.GenerateLocation()) // Si solo se ingreso la ciudad
                 {
-                    //Ya existe la ciudad?
+                    
                     LocationResponse locationByCity = await _locationServices.GetLocationByCity(req.Location.City);
                     if (locationByCity == null) // No existe esa ciudad
                     {
@@ -273,15 +266,15 @@ namespace Presentacion.Controllers
                 int locationId = userExist.Location.Id;
                 if (req.Location != null)
                 {
-                    // Con o sin coordenadas?
-                    // Validar si se ingreso correctamente
+                    
+                    
                     if (!_validateLocationServices.ValidateLocation(req.Location)) //Si no se ingreso nada
                     {
                         return new JsonResult(new { Message = $"Ingrese una ubicación valida" }) { StatusCode = 400 };
                     }
                     else if (_validateLocationServices.GenerateLocation()) // Si solo se ingreso la ciudad
                     {
-                        //Ya existe la ciudad?
+                        
                         LocationResponse locationByCity = await _locationServices.GetLocationByCity(req.Location.City);
                         if (locationByCity == null) // No existe esa ciudad
                         {
