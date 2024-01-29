@@ -1,11 +1,7 @@
 ﻿using System.Security.Claims;
 using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Microsoft.Net.Http.Headers;
-using Presentation.Authorization;
-using static Dropbox.Api.Files.SearchMatchType;
 
 namespace Presentation.Authorization;
 
@@ -25,8 +21,6 @@ public class ApiKeySchemeHandler : AuthenticationHandler<ApiKeySchemeOptions>
         }
 
         var apiKey = Request.Headers[Options.HeaderName];
-
-        //var apiKey = "0e6b2066-9e98-4783-8c82-c3530aa8a197";
                
 
         if (apiKey == "")
@@ -36,7 +30,6 @@ public class ApiKeySchemeHandler : AuthenticationHandler<ApiKeySchemeOptions>
 
         var claims = new Claim[]
         {
-            //new Claim(ClaimTypes.NameIdentifier, $"{apiKey}"),
             new Claim(ClaimTypes.Name, apiKey)
         };
 
