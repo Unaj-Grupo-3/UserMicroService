@@ -180,8 +180,6 @@ namespace Application.UseCases
                 location.Address = $"{user.Location.City}, {user.Location.Province}, {user.Location.Country}";
             }
 
-            //string address = $"{user.Location.City}, {user.Location.Province}, {user.Location.Country}";
-
             UserResponse response = new UserResponse
             {
                 UserId = user.UserId,
